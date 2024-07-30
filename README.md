@@ -1,1 +1,3 @@
-# code-odessey-hex-arch
+# _Redesigning_ Code Odessey Using a Modular Monolithic Architecture Employing the Hexagonal Architecture Pattern, Type-Driven Development and Production-Ready Approach
+
+> DISCLAIMER: Code in this repository is intended for educational purpose and a continuation of the [Code Odyssey](https://github.com/TeamKweku/code-odessey) project. Instead of refactoring the existing codebase, we are redesigning the project using a modular monolithic architecture employing the hexagonal architecture pattern, type-driven development and a production-ready approach just as a learning process for various concepts and best practices in software development. Also note the the goal of this project is to be able to use the ports and adpater nature to integrate with many technologies and services as possible.
