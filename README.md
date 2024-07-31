@@ -49,3 +49,7 @@ Here's what's been implemented so far.
 - [ ] Tracing
 - [ ] API documentation
 - [ ] Local Deployment
+
+## Acknowledgements
+
+This project was inspired by and borrows concepts from [Realworld-go](https://github.com/angusgmorrison/realworld-go) by Angus Morrison. The original code provided valuable insights into structuring a Go application using hexagonal architecture.
