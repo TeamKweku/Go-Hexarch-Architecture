@@ -24,4 +24,12 @@ type UserService interface {
 	// # Errors
 	//	- [AuthError].
 	Authenticate(ctx context.Context, req *user.LoginRequest) (*user.User, error)
+	// UpdateUser updates an existing user.
+	//
+	// # Errors
+	// 	- [NotFoundError] if no such User exists.
+	// 	- [ValidationError] if email is already taken.
+	//  - [ConcurrentModificationError] if the user has been modified since the last
+	//    read.
+	UpdateUser(ctx context.Context, req *user.UpdateRequest) (*user.User, error)
 }
