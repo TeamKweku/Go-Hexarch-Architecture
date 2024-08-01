@@ -4,7 +4,11 @@ import (
 	"fmt"
 	"net/mail"
 	"regexp"
+	"time"
 
+	"github.com/google/uuid"
+	"github.com/teamkweku/code-odessey-hex-arch/pkg/etag"
+	"github.com/teamkweku/code-odessey-hex-arch/pkg/option"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -198,6 +202,86 @@ func (r Role) GoString() string {
 	return fmt.Sprintf("Role(%d)", int(r))
 }
 
+func NewUser(
+	pkid option.Option[int64],
+	id uuid.UUID,
+	eTag etag.ETag,
+	username Username,
+	email EmailAddress,
+	passwordHash PasswordHash,
+	role Role,
+	createAt time.Time,
+	paswordChangedAt time.Time,
+
+) *User {
+	return &User{
+		id:                id,
+		eTag:              eTag,
+		username:          username,
+		email:             email,
+		passwordHash:      passwordHash,
+		role:              role,
+		createAt:          createAt,
+		passwordChangedAt: paswordChangedAt,
+	}
+}
+
+// getter methods
+func (u *User) ID() uuid.UUID {
+	return u.id
+}
+
+func (u *User) ETag() etag.ETag {
+	return u.eTag
+}
+
+func (u *User) Username() Username {
+	return u.username
+}
+
+func (u *User) Email() EmailAddress {
+	return u.email
+}
+
+func (u *User) PasswordHash() PasswordHash {
+	return u.passwordHash
+}
+
+// GoString ensures that the [PasswordHash]'s GoString method is invoked when the
+// User is printed with the %#v verb. Unexported fields are otherwise printed
+// reflectively, which would expose the hash.
+func (u User) GoString() string {
+	return fmt.Sprintf(
+		"User{id:%#v, eTag:%#v, username:%#v, email:%#v, passwordHash:%#v,",
+		u.id, u.eTag, u.username, u.email, u.passwordHash,
+	)
+}
+
+// GoString ensures that the [PasswordHash]'s GoString method is invoked when the
+// User is printed with the %s or %v verbs. Unexported fields are otherwise printed
+// reflectively, which would expose the hash.
+func (u User) String() string {
+	return fmt.Sprintf("{ %s %s %s %s %s %s}",
+		u.id, u.eTag, u.username, u.email, u.passwordHash, u.role)
+}
+
+// RegistrationRequest carries validated data required to register a new user.
+type RegistrationRequest struct {
+	username     Username
+	email        EmailAddress
+	passwordHash PasswordHash
+}
+
+func NewRegistrationRequest(
+	username Username, email EmailAddress, passwordHash PasswordHash,
+) *RegistrationRequest {
+	return &RegistrationRequest{
+		username:     username,
+		email:        email,
+		passwordHash: passwordHash,
+	}
+}
+
 // ParseRegistrationRequest returns a new [RegistrationRequest] from raw inputs.
 //
 // # Errors
@@ -247,7 +331,7 @@ func (r *RegistrationRequest) PasswordHash() PasswordHash {
 // Equal returns true if `r.passwordHash` can be obtained from `password`,
 // and the two requests are equal in all other fields.
 //
-// Direct comparison of password hashes is impossible by design.
+// Direct comparu.pkid,ison of password hashes is impossible by design.
 func (r *RegistrationRequest) Equal(other *RegistrationRequest, password string) bool {
 	if len(r.passwordHash.bytes) > 0 || len(other.passwordHash.bytes) > 0 {
 		if err := bcryptCompare(r.passwordHash, password); err != nil {
@@ -327,4 +411,132 @@ func (lg LoginRequest) GoString() string {
 // reflectively, which would expose the hash.
 func (lg LoginRequest) String() string {
 	return fmt.Sprintf("{%s REDACTED}", lg.email)
+}
+
+// UpdateRequest describes  the data fields required to update a user. All fields but
+// userID are optional.
+type UpdateRequest struct {
+	userID       uuid.UUID
+	eTag         etag.ETag
+	username     option.Option[Username]
+	email        option.Option[EmailAddress]
+	passwordHash option.Option[PasswordHash]
+	role         option.Option[Role]
+}
+
+func NewUpdateRequest(
+	userID uuid.UUID,
+	eTag etag.ETag,
+	email option.Option[EmailAddress],
+	passwordHash option.Option[PasswordHash],
+	username option.Option[Username],
+	role option.Option[Role],
+) *UpdateRequest {
+	return &UpdateRequest{
+		userID:       userID,
+		eTag:         eTag,
+		email:        email,
+		passwordHash: passwordHash,
+		username:     username,
+		role:         role,
+	}
+}
+
+// ParseUpdateRequest returns a new [UpdateRequest] from raw inputs.
+//
+// # Errors
+//   - [ValidationErrors], if one or more inputs are invalid.
+//   - Unexpected internal response.
+func ParseUpdateRequest(
+	userID uuid.UUID,
+	eTag etag.ETag,
+	emailCandidate option.Option[string],
+	passwordCandidate option.Option[string],
+	usernameCandidate option.Option[string],
+	roleCandidate option.Option[int],
+
+) (*UpdateRequest, error) {
+	var validationErrs ValidationErrors
+
+	email, err := option.Map(emailCandidate, ParseEmailAddress)
+	if pushErr := validationErrs.PushValidationError(err); pushErr != nil {
+		return nil, pushErr
+	}
+
+	passwordHash, err := option.Map(passwordCandidate, ParsePassword)
+	if pushErr := validationErrs.PushValidationError(err); pushErr != nil {
+		return nil, pushErr
+	}
+
+	username, err := option.Map(usernameCandidate, ParseUsername)
+	if pushErr := validationErrs.PushValidationError(err); pushErr != nil {
+		return nil, pushErr
+	}
+
+	role, err := option.Map(roleCandidate, ParseRole)
+	if pushErr := validationErrs.PushValidationError(err); pushErr != nil {
+		return nil, pushErr
+	}
+
+	if validationErrs.Any() {
+		return nil, validationErrs
+	}
+
+	return NewUpdateRequest(userID, eTag, email, passwordHash, username, role), nil
+}
+
+func (ur *UpdateRequest) UserID() uuid.UUID {
+	return ur.userID
+}
+
+func (ur *UpdateRequest) ETag() etag.ETag {
+	return ur.eTag
+}
+
+func (ur *UpdateRequest) Email() option.Option[EmailAddress] {
+	return ur.email
+}
+
+func (ur *UpdateRequest) PasswordHash() option.Option[PasswordHash] {
+	return ur.passwordHash
+}
+
+func (ur *UpdateRequest) Username() option.Option[Username] {
+	return ur.username
+}
+
+func (ur *UpdateRequest) Role() option.Option[Role] {
+	return ur.role
+}
+
+func (ur UpdateRequest) GoString() string {
+	return fmt.Sprintf("UpdateRequest{userID:%#v, eTag:%#v, email:%#v, passwordHash:%#v}",
+		ur.userID, ur.eTag, ur.email, ur.passwordHash)
+}
+
+func (ur UpdateRequest) String() string {
+	return fmt.Sprintf("{%s %s %s %s }", ur.userID, ur.eTag, ur.email, ur.passwordHash)
+}
+
+// Equal returns true if `ur.passwordHash` can be obtained from `password`,
+// and the two requests are equal in all other fields.
+//
+// Direct comparison of password hashes is impossible by design.
+func (ur *UpdateRequest) Equal(other *UpdateRequest, password option.Option[string]) bool {
+	if ur.passwordHash.IsSome() || other.passwordHash.IsSome() {
+		pw := password.UnwrapOrZero()
+		if err := bcryptCompare(ur.passwordHash.UnwrapOrZero(), pw); err != nil {
+			return false
+		}
+		if err := bcryptCompare(other.passwordHash.UnwrapOrZero(), pw); err != nil {
+			return false
+		}
+	}
+
+	if ur.userID != other.userID ||
+		ur.email != other.email {
+		return false
+	}
+
+	return true
 }
