@@ -17,6 +17,7 @@ const (
 	UsernameFieldType
 	EmailFieldType
 	PasswordFieldType
+	RoleFieldType
 )
 
 var fieldNames = [5]string{"id", "username", "email", "password"}

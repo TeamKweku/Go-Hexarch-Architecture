@@ -3,6 +3,7 @@ package inbound
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/user"
 )
 
@@ -17,7 +18,7 @@ type UserService interface {
 	//
 	// # Errors
 	// 	- [NotFoundError] if no such User exists.
-	GetUser(ctx context.Context, id int64) (*user.User, error)
+	GetUser(ctx context.Context, id uuid.UUID) (*user.User, error)
 
 	// Authenticate a user, returning the authenticated [User] if successful.
 	//
