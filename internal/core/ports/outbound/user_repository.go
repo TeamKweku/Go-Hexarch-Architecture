@@ -3,6 +3,7 @@ package outbound
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/user"
 )
 
@@ -12,7 +13,7 @@ type UserRepository interface {
 	//
 	// # Errors
 	// 	- [NotFoundError] if no such User exists.
-	GetUserByID(ctx context.Context, id int64) (*user.User, error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (*user.User, error)
 
 	// GetUserByEmail returns a user by email.
 	//
