@@ -76,7 +76,7 @@ func (u Username) String() string {
 }
 
 const (
-	PasswordMinLen = 0
+	PasswordMinLen = 8
 	PasswordMaxLen = 72
 )
 
@@ -153,7 +153,7 @@ func bcryptHash(candidate string) (PasswordHash, error) {
 // passwordComparator is a function that compares a [PasswordHash] and password.
 // By abstracting a general class of comparator functions, we can simulate
 // comparison errors in tests.
-// type passwordComparator func(hash PasswordHash, candidate string) error
+type passwordComparator func(hash PasswordHash, candidate string) error
 
 func bcryptCompare(hash PasswordHash, candidate string) error {
 	if err := bcrypt.CompareHashAndPassword(hash.bytes, []byte(candidate)); err != nil {
