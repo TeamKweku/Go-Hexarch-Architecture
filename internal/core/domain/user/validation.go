@@ -509,12 +509,12 @@ func (ur *UpdateRequest) Role() option.Option[Role] {
 }
 
 func (ur UpdateRequest) GoString() string {
-	return fmt.Sprintf("UpdateRequest{userID:%#v, eTag:%#v, email:%#v, passwordHash:%#v}",
-		ur.userID, ur.eTag, ur.email, ur.passwordHash)
+	return fmt.Sprintf("UpdateRequest{userID:%#v, eTag:%#v, email:%#v, passwordHash:%#v, username:%#v, role:%#v,}",
+		ur.userID, ur.eTag, ur.email, ur.passwordHash, ur.username, ur.role)
 }
 
 func (ur UpdateRequest) String() string {
-	return fmt.Sprintf("{%s %s %s %s }", ur.userID, ur.eTag, ur.email, ur.passwordHash)
+	return fmt.Sprintf("{%s %s %s %s %s %s}", ur.userID, ur.eTag, ur.email, ur.passwordHash, ur.username, ur.role)
 }
 
 // Equal returns true if `ur.passwordHash` can be obtained from `password`,
