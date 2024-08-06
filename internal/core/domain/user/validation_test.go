@@ -143,7 +143,7 @@ func Test_parsePassword(t *testing.T) {
 			hasher:    bcryptHash,
 			assertPasswordHash: func(t *testing.T, hash PasswordHash, candidate string) {
 				t.Helper()
-				assert.NoError(t, bcryptCompare(hash, candidate))
+				assert.NoError(t, BcryptCompare(hash, candidate))
 			},
 			wantErr: nil,
 		},
@@ -413,7 +413,7 @@ func Test_ParseRegistrationRequest(t *testing.T) {
 				assert.NotNil(t, req)
 				assert.Equal(t, tc.username, req.Username().String())
 				assert.Equal(t, tc.email, req.Email().String())
-				assert.NoError(t, bcryptCompare(req.PasswordHash(), tc.password))
+				assert.NoError(t, BcryptCompare(req.PasswordHash(), tc.password))
 			}
 		})
 	}
@@ -597,7 +597,7 @@ func Test_NewUpdateRequest(t *testing.T) {
 // 				"passwordHash should be an empty Option, but value %v was found",
 // 				got.passwordHash.UnwrapOrZero())
 // 		} else {
-// 			err := bcryptCompare(got.passwordHash.UnwrapOrZero(), validPassword)
+// 			err := BcryptCompare(got.passwordHash.UnwrapOrZero(), validPassword)
 // 			assert.NoError(t, err)
 // 		}
 // 	}

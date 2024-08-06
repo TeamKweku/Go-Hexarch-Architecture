@@ -153,9 +153,9 @@ func bcryptHash(candidate string) (PasswordHash, error) {
 // passwordComparator is a function that compares a [PasswordHash] and password.
 // By abstracting a general class of comparator functions, we can simulate
 // comparison errors in tests.
-type passwordComparator func(hash PasswordHash, candidate string) error
+type PasswordComparator func(hash PasswordHash, candidate string) error
 
-func bcryptCompare(hash PasswordHash, candidate string) error {
+func BcryptCompare(hash PasswordHash, candidate string) error {
 	if err := bcrypt.CompareHashAndPassword(hash.bytes, []byte(candidate)); err != nil {
 		return &AuthError{Cause: err}
 	}
@@ -333,10 +333,10 @@ func (r *RegistrationRequest) PasswordHash() PasswordHash {
 // Direct comparu.pkid,ison of password hashes is impossible by design.
 func (r *RegistrationRequest) Equal(other *RegistrationRequest, password string) bool {
 	if len(r.passwordHash.bytes) > 0 || len(other.passwordHash.bytes) > 0 {
-		if err := bcryptCompare(r.passwordHash, password); err != nil {
+		if err := BcryptCompare(r.passwordHash, password); err != nil {
 			return false
 		}
-		if err := bcryptCompare(other.passwordHash, password); err != nil {
+		if err := BcryptCompare(other.passwordHash, password); err != nil {
 			return false
 		}
 	}
@@ -524,10 +524,10 @@ func (ur UpdateRequest) String() string {
 func (ur *UpdateRequest) Equal(other *UpdateRequest, password option.Option[string]) bool {
 	if ur.passwordHash.IsSome() || other.passwordHash.IsSome() {
 		pw := password.UnwrapOrZero()
-		if err := bcryptCompare(ur.passwordHash.UnwrapOrZero(), pw); err != nil {
+		if err := BcryptCompare(ur.passwordHash.UnwrapOrZero(), pw); err != nil {
 			return false
 		}
-		if err := bcryptCompare(other.passwordHash.UnwrapOrZero(), pw); err != nil {
+		if err := BcryptCompare(other.passwordHash.UnwrapOrZero(), pw); err != nil {
 			return false
 		}
 	}
