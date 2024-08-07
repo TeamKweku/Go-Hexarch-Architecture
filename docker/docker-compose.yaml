@@ -8,7 +8,7 @@ services:
       - POSTGRES_PASSWORD=${CODE_ODESSEY_DB_PASSWORD}
       - POSTGRES_DB=${CODE_ODESSEY_DB_NAME}
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${CODE_ODESSEY_DB_USER}" ]
+      test: ["CMD", "pg_isready", "-U", "${CODE_ODESSEY_DB_USER}"]
       interval: 5s
       timeout: 5s
       retries: 5
