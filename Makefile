@@ -28,6 +28,10 @@ generate: generate/queries generate/data_mount_fixtures
 ## Run psql against the database. Alias for docker/exec/psql.
 psql: docker/exec/psql
 
+.PHONY: postgres
+## Run postgres db without other affiliated compose containers
+postgres: docker/up/postgres
+
 .PHONY: up
 ## Run the app interactively. Alias for docker/up.
 up: docker/up

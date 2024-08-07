@@ -13,7 +13,7 @@ $(QUERIES_PATH): docker/up/postgres
 generate/data_mount_fixtures:
 	@scripts/generate_data_mount_fixtures.sh
 
-## New migrations
+## Generate new migration schema files based on provided name
 generate/migration:
 	@scripts/create_migration.sh
 

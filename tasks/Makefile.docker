@@ -27,11 +27,11 @@ docker/test: docker/prune generate/data_mount_fixtures
 ## Run all services interactively
 docker/up: docker/prune
     CODE_ODESSEY_DOCKER_BUILD_TARGET=optimized \
-    docker compose up --build
+    docker compose -f docker/docker-compose.yaml --env-file .env up --build
 
 ## Run Postgres detached.
 docker/up/postgres: docker/prune
-	docker compose -f docker/docker-compose.yaml up --build --wait postgres
+	docker compose -f docker/docker-compose.yaml --env-file .env up --build --wait postgres
 
 ## Stop all services
 docker/down:
@@ -40,7 +40,7 @@ docker/down:
 
 ## Remove all Docker-generated artificats
 docker/clean: docker/prune
-	docker compose rm --stop --volumes || true
+	docker compose -f docker/docker-compose.yaml rm --stop --volumes || true
 	docker image rm ${CODE_ODESSEY_IMAGE_NAME} || true
 	docker image rm ${CODE_ODESSEY_IMAGE_NAME}:test || true
 	docker image prune --force
