@@ -1,0 +1,18 @@
+.PHONY: mock
+
+## Generate mock interfaces for testing
+mock: mock/user_service mock/user_repository
+
+mock/user_service:
+	@echo "Generating mock for user service..."
+	@mockgen -source=internal/core/ports/outbound/user_repository.go -destination=internal/core/ports/outbound/mock/mock_user_repository.go -package=mock_repo
+
+mock/user_repository:
+	@echo "Generating mock for user repository..."
+	@mockgen -source=internal/core/ports/outbound/user_repository.go -destination=internal/core/ports/outbound/mock/mock_user_repository.go -package=mock_repo
+
+## Remove generated mock files
+mock/clean:
+	@echo "Cleaning up generated mock files..."
+	@rm -f internal/core/ports/inbound/mock/mock_user_service.go
+	@rm -f internal/core/ports/outbound/mock/mock_user_repository.go
