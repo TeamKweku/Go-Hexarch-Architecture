@@ -1,0 +1,24 @@
+name: code-odessey
+
+services:
+  postgres:
+    image: postgres:16.0-alpine3.18
+    environment:
+      - POSTGRES_USER=${CODE_ODESSEY_DB_USER}
+      - POSTGRES_PASSWORD=${CODE_ODESSEY_DB_PASSWORD}
+      - POSTGRES_DB=${CODE_ODESSEY_DB_NAME}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "${CODE_ODESSEY_DB_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - ${CODE_ODESSEY_DB_PUBLISHED_PORT}:5432
+    volumes:
+      - type: volume
+        source: db_data
+        target: /var/lib/postgresql/data
+
+volumes:
+  db_data:
+    name: ${CODE_ODESSEY_DB_VOLUME}
