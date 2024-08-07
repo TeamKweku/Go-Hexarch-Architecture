@@ -1,7 +1,7 @@
 .PHONY: mock
 
 ## Generate mock interfaces for testing
-mock: mock/user_service mock/user_repository
+	mock: mock/user_service mock/user_repository
 
 mock/user_service:
 	@echo "Generating mock for user service..."
