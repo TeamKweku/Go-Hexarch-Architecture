@@ -39,7 +39,7 @@ docker/down:
 
 ## Run psql against the databaase
 docker/exec/psql: docker/up/postgres
-    docker compose exec postgres psql --username=${CODE_ODESSEY_DB_USER} --dbname=${CODE_ODESSEY_DB_NAME}
+	docker compose exec postgres psql --username=${CODE_ODESSEY_DB_USER} --dbname=${CODE_ODESSEY_DB_NAME}
 
 
 ## Remove all Docker-generated artificats
