@@ -3,11 +3,13 @@
 
 MIGRATION_URL = "file://$(shell pwd)/internal/adapters/outbound/postgres/migrations"
 
+## Run database migrations
 db/migrate: docker/up/postgres
 	@echo "Migrating database..."
-	migrate -source $(MIGRATION_URL) -database $(CODE_ODESSEY_DATABASE_URL) up && echo "Database migrated"
+	migrate -source $(MIGRATION_URL) -database $(CODE_ODESSEY_DATABASE_URI) up && echo "Database migrated"
 	@sqlc generate && echo "Generated sqlc models updated."
 
+## Drop database migrations
 db/drop: docker/up/postgres
 	@echo "Dropping database schema..."
-	migrate -source $(MIGRATION_URL) -database $(CODE_ODESSEY_DATABASE_URL) drop && echo "Database schema dropped"
+	migrate -source $(MIGRATION_URL) -database $(CODE_ODESSEY_DATABASE_URI) drop && echo "Database schema dropped"
