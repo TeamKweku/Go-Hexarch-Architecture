@@ -25,6 +25,10 @@ SET
     email = COALESCE(sqlc.narg(email), email),
     password_hash = COALESCE(sqlc.narg(password_hash), password_hash),
     role = COALESCE(sqlc.narg(role), role),
-    password_changed_at = COALESCE(sqlc.narg(password_changed_at), password_changed_at)
-WHERE id = $1
+    password_changed_at = CASE 
+        WHEN sqlc.narg(password_hash) IS NOT NULL THEN NOW()
+        ELSE password_changed_at
+  END
+WHERE 
+    id = sqlc.arg(id)
 RETURNING *;

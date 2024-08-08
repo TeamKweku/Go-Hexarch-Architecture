@@ -6,7 +6,7 @@ MIGRATION_URL = "file://$(shell pwd)/internal/adapters/outbound/postgres/migrati
 ## Run database migrations
 db/migrate: docker/up/postgres
 	@echo "Migrating database..."
-	migrate -source $(MIGRATION_URL) -database $(CODE_ODESSEY_DATABASE_URI) up && echo "Database migrated"
+	migrate -source $(MIGRATION_URL) -database $(CODE_ODESSEY_DATABASE_URI) -verbose up && echo "Database migrated"
 	@sqlc generate && echo "Generated sqlc models updated."
 
 ## Drop database migrations

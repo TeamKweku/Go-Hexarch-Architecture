@@ -20,7 +20,7 @@ INSERT INTO users (
     role
 )
 VALUES ($1, $2, $3, $4)
-RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at
+RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
 `
 
 type CreateUserParams struct {
@@ -47,12 +47,13 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.Role,
 		&i.CreatedAt,
 		&i.PasswordChangedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, etag, username, email, password_hash, role, created_at, password_changed_at
+SELECT id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
 FROM users
 WHERE email = $1 LIMIT 1
 `
@@ -69,12 +70,13 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.Role,
 		&i.CreatedAt,
 		&i.PasswordChangedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, etag, username, email, password_hash, role, created_at, password_changed_at
+SELECT id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
 FROM users
 WHERE id = $1 LIMIT 1
 `
@@ -91,6 +93,7 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 		&i.Role,
 		&i.CreatedAt,
 		&i.PasswordChangedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }
@@ -98,32 +101,34 @@ func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
 const updateUser = `-- name: UpdateUser :one
 UPDATE users
 SET
-    username = COALESCE($2, username),
-    email = COALESCE($3, email),
-    password_hash = COALESCE($4, password_hash),
-    role = COALESCE($5, role),
-    password_changed_at = COALESCE($6, password_changed_at)
-WHERE id = $1
-RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at
+    username = COALESCE($1, username),
+    email = COALESCE($2, email),
+    password_hash = COALESCE($3, password_hash),
+    role = COALESCE($4, role),
+    password_changed_at = CASE 
+        WHEN $3 IS NOT NULL THEN NOW()
+        ELSE password_changed_at
+  END
+WHERE 
+    id = $5
+RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
 `
 
 type UpdateUserParams struct {
-	ID                uuid.UUID        `json:"id"`
-	Username          pgtype.Text      `json:"username"`
-	Email             pgtype.Text      `json:"email"`
-	PasswordHash      pgtype.Text      `json:"password_hash"`
-	Role              pgtype.Text      `json:"role"`
-	PasswordChangedAt pgtype.Timestamp `json:"password_changed_at"`
+	Username     pgtype.Text `json:"username"`
+	Email        pgtype.Text `json:"email"`
+	PasswordHash pgtype.Text `json:"password_hash"`
+	Role         pgtype.Text `json:"role"`
+	ID           uuid.UUID   `json:"id"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
 	row := q.db.QueryRow(ctx, updateUser,
-		arg.ID,
 		arg.Username,
 		arg.Email,
 		arg.PasswordHash,
 		arg.Role,
-		arg.PasswordChangedAt,
+		arg.ID,
 	)
 	var i User
 	err := row.Scan(
@@ -135,6 +140,7 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Role,
 		&i.CreatedAt,
 		&i.PasswordChangedAt,
+		&i.UpdatedAt,
 	)
 	return i, err
 }

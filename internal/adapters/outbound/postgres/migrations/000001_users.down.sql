@@ -2,6 +2,9 @@
 DROP INDEX IF EXISTS users_email_idx;
 DROP INDEX IF EXISTS users_username_idx;
 
+-- Remove trigger for users table
+DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+
 -- Drop the users table
 DROP TABLE IF EXISTS "users";
 
