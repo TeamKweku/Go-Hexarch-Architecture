@@ -18,5 +18,3 @@ sql:
             go_type: "github.com/google/uuid.UUID"
           - db_type: "pg_catalog.timestamp"
             go_type: "time.Time"
-    database:
-      uri: ${CODE_ODESSEY_DATABASE_URI}
