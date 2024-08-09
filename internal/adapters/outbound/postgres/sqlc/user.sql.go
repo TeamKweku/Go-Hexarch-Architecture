@@ -3,7 +3,7 @@
 //   sqlc v1.27.0
 // source: user.sql
 
-package postgres
+package sqlc
 
 import (
 	"context"
@@ -16,10 +16,9 @@ const createUser = `-- name: CreateUser :one
 INSERT INTO users (
     username,
     email,
-    password_hash,
-    role
+    password_hash
 )
-VALUES ($1, $2, $3, $4)
+VALUES ($1, $2, $3)
 RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
 `
 
@@ -27,16 +26,10 @@ type CreateUserParams struct {
 	Username     string `json:"username"`
 	Email        string `json:"email"`
 	PasswordHash string `json:"password_hash"`
-	Role         string `json:"role"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser,
-		arg.Username,
-		arg.Email,
-		arg.PasswordHash,
-		arg.Role,
-	)
+	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.Email, arg.PasswordHash)
 	var i User
 	err := row.Scan(
 		&i.ID,

@@ -12,10 +12,9 @@ WHERE email = $1 LIMIT 1;
 INSERT INTO users (
     username,
     email,
-    password_hash,
-    role
+    password_hash
 )
-VALUES ($1, $2, $3, $4)
+VALUES ($1, $2, $3)
 RETURNING *;
 
 -- name: UpdateUser :one

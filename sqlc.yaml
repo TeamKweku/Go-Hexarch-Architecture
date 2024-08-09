@@ -5,7 +5,7 @@ sql:
     schema: "internal/adapters/outbound/postgres/migrations/"
     gen:
       go:
-        package: "postgres"
+        package: "sqlc"
         out: "./internal/adapters/outbound/postgres/sqlc/"
         emit_json_tags: true
         sql_package: "pgx/v5"

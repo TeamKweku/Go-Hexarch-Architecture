@@ -15,7 +15,7 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	// Create a temporary .env file
 	envFilePath := filepath.Join(tmpDir, ".env")
 	envFileContent := `CODE_ODESSEY_DB_DRIVER=postgres
-CODE_ODESSEY_DATABASE_URI=postgres://user:password@localhost:5432/codeodessey_db?sslmode=disable`
+		CODE_ODESSEY_DATABASE_URI=postgres://user:password@localhost:5432/codeodessey_db?sslmode=disable`
 
 	err := os.WriteFile(envFilePath, []byte(envFileContent), 0644)
 	require.NoError(t, err)
@@ -41,7 +41,7 @@ func TestLoadConfigEnvironmentVariablesOverride(t *testing.T) {
 	// Create a temporary .env file
 	envFilePath := filepath.Join(tmpDir, ".env")
 	envFileContent := `CODE_ODESSEY_DB_DRIVER=postgres
-CODE_ODESSEY_DATABASE_URI=postgres://user:password@localhost:5432/codeodessey_db?sslmode=disable`
+		CODE_ODESSEY_DATABASE_URI=postgres://user:password@localhost:5432/codeodessey_db?sslmode=disable`
 	err := os.WriteFile(envFilePath, []byte(envFileContent), 0644)
 	require.NoError(t, err)
 
