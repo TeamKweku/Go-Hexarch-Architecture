@@ -15,10 +15,17 @@ func TestCreateUser(t *testing.T) {
 		Username:     randomUser.Username().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
+		Etag:         randomUser.ETag().String(),
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
 
 	require.NoError(t, err)
 	require.NotEmpty(t, user)
+
+	require.Equal(t, arg.Username, user.Username)
+	require.Equal(t, arg.Email, user.Email)
+	require.Equal(t, arg.PasswordHash, user.PasswordHash)
+	require.NotEmpty(t, user.Role)
+
 }

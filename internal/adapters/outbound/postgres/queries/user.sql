@@ -10,11 +10,12 @@ WHERE email = $1 LIMIT 1;
 
 -- name: CreateUser :one
 INSERT INTO users (
+    etag,
     username,
     email,
     password_hash
 )
-VALUES ($1, $2, $3)
+VALUES ($1, $2, $3, $4)
 RETURNING *;
 
 -- name: UpdateUser :one

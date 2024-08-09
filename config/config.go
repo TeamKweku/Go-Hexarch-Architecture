@@ -1,6 +1,10 @@
 package config
 
-import "github.com/spf13/viper"
+import (
+	"fmt"
+
+	"github.com/spf13/viper"
+)
 
 type Config struct {
 	DBDriver string `mapstructure:"CODE_ODESSEY_DB_DRIVER"`
@@ -23,7 +27,7 @@ func LoadConfig(path string) (config Config, err error) {
 	// Read in the config file
 	err = viper.ReadInConfig()
 	if err != nil {
-		return Config{}, err
+		return Config{}, fmt.Errorf("failed to read config file: %w", err)
 
 	}
 
