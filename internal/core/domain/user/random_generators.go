@@ -113,7 +113,6 @@ func RandomRegistrationRequest(t *testing.T) *RegistrationRequest {
 	email := RandomEmailAddress(t)
 	password := RandomPasswordHash(t)
 	return NewRegistrationRequest(username, email, password)
-
 }
 
 func RandomLoginRequest(t *testing.T) *LoginRequest {
@@ -135,7 +134,6 @@ func RandomUpdateRequest(t *testing.T) *UpdateRequest {
 	role := RandomOption[Role](t)
 
 	return NewUpdateRequest(id, eTag, email, password, username, role)
-
 }
 
 func RandomUser(t *testing.T) *User {
