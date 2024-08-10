@@ -211,7 +211,6 @@ func NewUser(
 	role Role,
 	createAt time.Time,
 	paswordChangedAt time.Time,
-
 ) *User {
 	return &User{
 		id:                id,
@@ -453,7 +452,6 @@ func ParseUpdateRequest(
 	passwordCandidate option.Option[string],
 	usernameCandidate option.Option[string],
 	roleCandidate option.Option[int],
-
 ) (*UpdateRequest, error) {
 	var validationErrs ValidationErrors
 

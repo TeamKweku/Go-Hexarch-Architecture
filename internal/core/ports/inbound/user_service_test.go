@@ -79,7 +79,5 @@ func TestUserService_Register(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.Equal(t, expectedUser, resultUser)
-
 	})
-
 }

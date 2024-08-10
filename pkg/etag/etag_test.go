@@ -17,7 +17,12 @@ func Test_ParseTag(t *testing.T) {
 
 		id := uuid.New()
 		timestamp := time.Now()
-		raw := fmt.Sprintf(`"%s%s%s"`, id, eTagSeparator, timestamp.Format(time.RFC3339Nano))
+		raw := fmt.Sprintf(
+			`"%s%s%s"`,
+			id,
+			eTagSeparator,
+			timestamp.Format(time.RFC3339Nano),
+		)
 
 		got, err := Parse(raw)
 		assert.NoError(t, err)
@@ -40,7 +45,12 @@ func Test_ParseTag(t *testing.T) {
 			}{
 				{
 					name: "not a double-quoted string",
-					raw:  fmt.Sprintf("%s%s%s", uuid.New(), eTagSeparator, time.Now().Format(time.RFC3339Nano)),
+					raw: fmt.Sprintf(
+						"%s%s%s",
+						uuid.New(),
+						eTagSeparator,
+						time.Now().Format(time.RFC3339Nano),
+					),
 				},
 				{
 					name: "has < 2 components",
@@ -100,7 +110,12 @@ func Test_ETag_String(t *testing.T) {
 		id:        uuid.New(),
 		updatedAt: time.Now(),
 	}
-	expected := fmt.Sprintf(`"%s%s%s"`, eTag.id, eTagSeparator, eTag.updatedAt.Format(time.RFC3339Nano))
+	expected := fmt.Sprintf(
+		`"%s%s%s"`,
+		eTag.id,
+		eTagSeparator,
+		eTag.updatedAt.Format(time.RFC3339Nano),
+	)
 
 	got := eTag.String()
 	assert.Equal(t, expected, got)
@@ -120,7 +135,12 @@ func TestNew(t *testing.T) {
 	// test the updated at time is recent
 	assert.WithinDuration(t, time.Now(), etag.UpdatedAt(), 2*time.Second)
 	// Test that the string representation is correct
-	expectedFormat := fmt.Sprintf(`"%s%s%s"`, etag.ID(), eTagSeparator, etag.UpdatedAt().Format(time.RFC3339Nano))
+	expectedFormat := fmt.Sprintf(
+		`"%s%s%s"`,
+		etag.ID(),
+		eTagSeparator,
+		etag.UpdatedAt().Format(time.RFC3339Nano),
+	)
 	assert.Equal(t, expectedFormat, etag.String())
 }
 
@@ -139,12 +159,16 @@ func TestRandom(t *testing.T) {
 	assert.True(t, etag.UpdatedAt().Before(now) || etag.UpdatedAt().Equal(now))
 
 	// Test that the string representation is correct
-	expectedFormat := fmt.Sprintf(`"%s%s%s"`, etag.ID(), eTagSeparator, etag.UpdatedAt().Format(time.RFC3339Nano))
+	expectedFormat := fmt.Sprintf(
+		`"%s%s%s"`,
+		etag.ID(),
+		eTagSeparator,
+		etag.UpdatedAt().Format(time.RFC3339Nano),
+	)
 	assert.Equal(t, expectedFormat, etag.String())
 
 	// Test multiple random ETags to ensure they're different
 	anotherETag := Random()
 	assert.NotEqual(t, etag.ID(), anotherETag.ID())
 	assert.NotEqual(t, etag.UpdatedAt(), anotherETag.UpdatedAt())
-
 }

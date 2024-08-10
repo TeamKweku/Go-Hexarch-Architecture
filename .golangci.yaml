@@ -1,0 +1,66 @@
+run:
+  timeout: "1m"
+  modules-download-mode: "readonly"
+
+issues:
+  exclude-use-default: false
+  exclude-rules:
+    - path: '_test\.go'
+      linters:
+        - "wrapcheck"
+        - "gosec"
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+linters: # https://golangci-lint.run/usage/linters/
+  enable:
+    - "errcheck"
+    - "exhaustive"
+    - "gocheckcompilerdirectives"
+    - "gofumpt"
+    - "gosec"
+    - "gosimple"
+    - "govet"
+    - "ineffassign"
+    - "nilerr"
+    - "nilnil"
+    - "noctx"
+    - "paralleltest"
+    - "prealloc"
+    - "reassign"
+    - "rowserrcheck"
+    - "sqlclosecheck"
+    - "staticcheck"
+    - "thelper"
+    - "unconvert"
+    - "unparam"
+    - "unused"
+    - "usestdlibvars"
+    - "whitespace"
+    - "wrapcheck"
+
+linters-settings:
+  exhaustive:
+    default-signifies-exhaustive: true
+
+  wrapcheck:
+    ignoreSigs:
+      - ".Errorf("
+      - "response.New("
+      - "response.Unwrap("
+      - "response.Join("
+      - ".Wrap("
+      - ".Wrapf("
+      - ".WithMessage("
+      - ".WithMessagef("
+      - ".WithStack("
+      - "user.New"
+      - "user.Parse"
+    ignoreInterfaceRegexps:
+      - "Presenter"
+    ignorePackageGlobs:
+      - "errors"
+      - "github.com/gofiber/fiber/*"
+      - "github.com/stretchr/testify/**"
+      - "github.com/angusgmorrison/realworld-go/internal/domain/**"
+      - "github.com/angusgmorrison/realworld-go/internal/inbound/rest/api/**"
