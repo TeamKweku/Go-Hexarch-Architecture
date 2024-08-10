@@ -1,3 +1,6 @@
+//go:build !paralleltest
+// +build !paralleltest
+
 package sqlc
 
 import (

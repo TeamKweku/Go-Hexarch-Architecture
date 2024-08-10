@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/etag"
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/option"
 )
@@ -230,7 +231,10 @@ func TestParseRole(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		// capturing range variable
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 			role, err := ParseRole(tt.candidate)
 
 			if tt.expectError {
@@ -259,7 +263,9 @@ func TestRole_String(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.expected, func(t *testing.T) {
+			t.Parallel()
 			assert.Equal(t, tt.expected, tt.role.String())
 		})
 	}
@@ -279,7 +285,9 @@ func TestRole_GoString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(fmt.Sprintf("Role(%d)", int(tt.role)), func(t *testing.T) {
+			t.Parallel()
 			assert.Equal(t, tt.expected, tt.role.GoString())
 		})
 	}
@@ -305,7 +313,16 @@ func Test_NewUser(t *testing.T) {
 	createdAt := time.Now()
 	passwordChangedAt := createdAt.Add(time.Hour)
 
-	user := NewUser(id, eTag, username, email, passwordHash, role, createdAt, passwordChangedAt)
+	user := NewUser(
+		id,
+		eTag,
+		username,
+		email,
+		passwordHash,
+		role,
+		createdAt,
+		passwordChangedAt,
+	)
 
 	assert.NotNil(t, user)
 	assert.Equal(t, id, user.ID())
@@ -333,8 +350,15 @@ func Test_User_String(t *testing.T) {
 
 	user := RandomUser(t)
 
-	expected := fmt.Sprintf("{ %s %s %s %s %s %s}",
-		user.id, user.eTag, user.username, user.email, user.passwordHash, user.role)
+	expected := fmt.Sprintf(
+		"{ %s %s %s %s %s %s}",
+		user.id,
+		user.eTag,
+		user.username,
+		user.email,
+		user.passwordHash,
+		user.role,
+	)
 
 	assert.Equal(t, expected, user.String())
 }
@@ -403,7 +427,11 @@ func Test_ParseRegistrationRequest(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			req, err := ParseRegistrationRequest(tc.username, tc.email, tc.password)
+			req, err := ParseRegistrationRequest(
+				tc.username,
+				tc.email,
+				tc.password,
+			)
 
 			if tc.wantError {
 				assert.Error(t, err)
@@ -436,7 +464,11 @@ func Test_RegistrationRequest_Equal(t *testing.T) {
 	req2 := RandomRegistrationRequest(t)
 
 	// Create req3 as a copy of req1
-	req3 := NewRegistrationRequest(req1.Username(), req1.Email(), req1.PasswordHash())
+	req3 := NewRegistrationRequest(
+		req1.Username(),
+		req1.Email(),
+		req1.PasswordHash(),
+	)
 
 	testCases := []struct {
 		name     string
@@ -530,7 +562,10 @@ func Test_LoginRequest_GoString(t *testing.T) {
 
 	req := RandomLoginRequest(t)
 
-	expected := fmt.Sprintf("LoginRequest{email:%#v, passwordCandidate:REDACTED}", req.Email())
+	expected := fmt.Sprintf(
+		"LoginRequest{email:%#v, passwordCandidate:REDACTED}",
+		req.Email(),
+	)
 
 	assert.Equal(t, expected, req.GoString())
 }
@@ -703,7 +738,14 @@ func Test_ParseUpdateRequest(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			t.Parallel()
 
-			req, err := ParseUpdateRequest(tc.userID, tc.eTag, tc.emailCandidate, tc.passwordCandidate, tc.usernameCandidate, tc.roleCandidate)
+			req, err := ParseUpdateRequest(
+				tc.userID,
+				tc.eTag,
+				tc.emailCandidate,
+				tc.passwordCandidate,
+				tc.usernameCandidate,
+				tc.roleCandidate,
+			)
 
 			if tc.wantErr {
 				assert.Error(t, err)
@@ -782,7 +824,12 @@ func Test_UpdateRequest_GoString(t *testing.T) {
 
 	expected := fmt.Sprintf(
 		"UpdateRequest{userID:%#v, eTag:%#v, email:%#v, passwordHash:%#v, username:%#v, role:%#v,}",
-		req.userID, req.eTag, req.email, req.passwordHash, req.username, req.role,
+		req.userID,
+		req.eTag,
+		req.email,
+		req.passwordHash,
+		req.username,
+		req.role,
 	)
 
 	assert.Equal(t, expected, req.GoString())
@@ -793,8 +840,15 @@ func Test_UpdateRequest_String(t *testing.T) {
 
 	req := RandomUpdateRequest(t)
 
-	expected := fmt.Sprintf("{%s %s %s %s %s %s}",
-		req.userID, req.eTag, req.email, req.passwordHash, req.username, req.role)
+	expected := fmt.Sprintf(
+		"{%s %s %s %s %s %s}",
+		req.userID,
+		req.eTag,
+		req.email,
+		req.passwordHash,
+		req.username,
+		req.role,
+	)
 
 	assert.Equal(t, expected, req.String())
 }
@@ -812,8 +866,22 @@ func Test_UpdateRequest_Equal(t *testing.T) {
 	username := option.Some(RandomUsername(t))
 	role := option.Some(RandomRole(t))
 
-	req1 := NewUpdateRequest(userID, eTag, email, option.Some(passwordHash), username, role)
-	req2 := NewUpdateRequest(userID, eTag, email, option.Some(passwordHash), username, role)
+	req1 := NewUpdateRequest(
+		userID,
+		eTag,
+		email,
+		option.Some(passwordHash),
+		username,
+		role,
+	)
+	req2 := NewUpdateRequest(
+		userID,
+		eTag,
+		email,
+		option.Some(passwordHash),
+		username,
+		role,
+	)
 	req3 := RandomUpdateRequest(t)
 
 	testCases := []struct {
