@@ -1,1 +1,1 @@
-package outbound
+package postgres
