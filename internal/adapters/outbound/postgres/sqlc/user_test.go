@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/stretchr/testify/require"
 
@@ -34,6 +35,34 @@ func TestCreateUser(t *testing.T) {
 	require.NotZero(t, user.ID)
 	require.Equal(t, user.PasswordChangedAt.UTC(), time.Time{}.UTC())
 	require.Equal(t, user.UpdatedAt.UTC(), time.Time{}.UTC())
+}
+
+//nolint:paralleltest
+func TestUserExists(t *testing.T) {
+	randomUser := user.RandomUser(t)
+
+	arg := CreateUserParams{
+		Username:     randomUser.Username().String(),
+		Email:        randomUser.Email().String(),
+		PasswordHash: string(randomUser.PasswordHash().Bytes()),
+		Etag:         randomUser.ETag().String(),
+	}
+
+	user, err := testQueries.CreateUser(context.Background(), arg)
+
+	require.NoError(t, err)
+	require.NotEmpty(t, user)
+
+	// Test user TestUserExists
+	exists, err := testQueries.UserExists(context.Background(), user.ID)
+	require.NoError(t, err)
+	require.True(t, exists)
+
+	// test non-existent user
+	nonExistentID := uuid.New()
+	exists, err = testQueries.UserExists(context.Background(), nonExistentID)
+	require.NoError(t, err)
+	require.False(t, exists)
 }
 
 //nolint:paralleltest
@@ -202,4 +231,35 @@ func TestUpdateUserPartial(t *testing.T) {
 		updatedUser.UpdatedAt.UTC(),
 		2*time.Second,
 	)
+}
+
+//nolint:paralleltest
+func TestDeleteUser(t *testing.T) {
+	// Create a user
+	randomUser := user.RandomUser(t)
+	arg := CreateUserParams{
+		Username:     randomUser.Username().String(),
+		Etag:         randomUser.ETag().String(),
+		Email:        randomUser.Email().String(),
+		PasswordHash: string(randomUser.PasswordHash().Bytes()),
+	}
+	createdUser, err := testQueries.CreateUser(context.Background(), arg)
+	require.NoError(t, err)
+	require.NotEmpty(t, createdUser)
+
+	// Delete the user
+	err = testQueries.DeleteUser(context.Background(), createdUser.ID)
+	require.NoError(t, err)
+
+	// Verify the user no longer exists
+	exists, err := testQueries.UserExists(context.Background(), createdUser.ID)
+	require.NoError(t, err)
+	require.False(t, exists)
+
+	// Attempt to get the deleted user
+	_, err = testQueries.GetUserById(context.Background(), createdUser.ID)
+	require.Error(
+		t,
+		err,
+	) // Expect an error because the user should not be found
 }
