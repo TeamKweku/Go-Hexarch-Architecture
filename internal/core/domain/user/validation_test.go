@@ -230,6 +230,7 @@ func TestParseRole(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 			role, err := ParseRole(tt.candidate)
@@ -259,6 +260,7 @@ func TestRole_String(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.expected, func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, tt.expected, tt.role.String())
@@ -279,6 +281,7 @@ func TestRole_GoString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(fmt.Sprintf("Role(%d)", int(tt.role)), func(t *testing.T) {
 			t.Parallel()
 			assert.Equal(t, tt.expected, tt.role.GoString())
