@@ -1,13 +1,15 @@
 package user
 
 import (
-	"math/rand"
+	"crypto/rand"
+	"math/big"
 	"testing"
 	"time"
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/require"
+
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/etag"
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/option"
 )
@@ -21,14 +23,16 @@ func RandomUsernameCandidate() string {
 }
 
 func RandomPasswordCandidate() string {
-	length := rand.Intn(PasswordMaxLen-PasswordMinLen) + PasswordMinLen
-	raw := gofakeit.Password(true, true, true, true, true, length)
+	length, _ := rand.Int(rand.Reader, big.NewInt(int64(PasswordMaxLen-PasswordMinLen)))
+	length = length.Add(length, big.NewInt(int64(PasswordMinLen)))
+	raw := gofakeit.Password(true, true, true, true, true, int(length.Int64()))
 	return raw
 }
 
 func RandomRoleCandidate() int {
 	roles := []Role{RoleReader, RoleAuthor, RoleEditor, RoleAdmin}
-	return int(roles[rand.Intn(len(roles))])
+	n, _ := rand.Int(rand.Reader, big.NewInt(int64(len(roles))))
+	return int(n.Int64())
 }
 
 func RandomEmailAddress(t *testing.T) EmailAddress {
@@ -71,7 +75,8 @@ func RandomRole(t *testing.T) Role {
 func RandomOption[T any](t *testing.T) option.Option[T] {
 	t.Helper()
 
-	if rand.Intn(2) == 0 {
+	n, _ := rand.Int(rand.Reader, big.NewInt(2))
+	if n.Int64() == 0 {
 		switch any(*new(T)).(type) {
 		case EmailAddress:
 			email := any(RandomEmailAddress(t)).(T)
@@ -99,7 +104,8 @@ func RandomOption[T any](t *testing.T) option.Option[T] {
 }
 
 func RandomOptionFromInstance[T any](instance T) option.Option[T] {
-	if rand.Intn(2) == 0 {
+	n, _ := rand.Int(rand.Reader, big.NewInt(2))
+	if n.Int64() == 0 {
 		return option.Some(instance)
 	}
 
@@ -148,5 +154,14 @@ func RandomUser(t *testing.T) *User {
 	createdAt := time.Now()
 	passwordUpdatedAt := time.Now()
 
-	return NewUser(id, etag, username, email, password, role, createdAt, passwordUpdatedAt)
+	return NewUser(
+		id,
+		etag,
+		username,
+		email,
+		password,
+		role,
+		createdAt,
+		passwordUpdatedAt,
+	)
 }
