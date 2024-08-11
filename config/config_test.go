@@ -52,6 +52,7 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	}()
 }
 
+//nolint:paralleltest
 func TestLoadConfigEnvironmentVariablesOverride(t *testing.T) {
 	// Create a temporary directory
 	tmpDir := t.TempDir()
@@ -63,14 +64,20 @@ func TestLoadConfigEnvironmentVariablesOverride(t *testing.T) {
 	require.NoError(t, err)
 
 	// Set environment variables to override the values in the .env file
-	os.Setenv("CODE_ODESSEY_DB_DRIVER", "mysql")
-	os.Setenv(
+	err = os.Setenv("CODE_ODESSEY_DB_DRIVER", "mysql")
+	require.NoError(t, err)
+	err = os.Setenv(
 		"CODE_ODESSEY_DATABASE_URI",
 		"mysql://user:password@localhost:3306/codeodessey_db",
 	)
-	defer os.Unsetenv("CODE_ODESSEY_DB_DRIVER")
-	defer os.Unsetenv("CODE_ODESSEY_DATABASE_URI")
+	require.NoError(t, err)
 
+	defer func() {
+		err := os.Unsetenv("CODE_ODESSEY_DB_DRIVER")
+		require.NoError(t, err)
+		err = os.Unsetenv("CODE_ODESSEY_DATABASE_URI")
+		require.NoError(t, err)
+	}()
 	// Load the config
 	config, err := LoadConfig(tmpDir)
 	require.NoError(t, err)
