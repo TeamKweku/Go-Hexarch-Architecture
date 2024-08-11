@@ -3,6 +3,13 @@ SELECT *
 FROM users
 WHERE id = $1 LIMIT 1;
 
+-- name: UserExists :one
+SELECT EXISTS(
+    SELECT 1
+    FROM users
+    WHERE id = $1
+);
+
 -- name: GetUserByEmail :one
 SELECT *
 FROM users
@@ -32,3 +39,7 @@ SET
 WHERE 
     id = sqlc.arg(id)
 RETURNING *;
+
+-- name: DeleteUser :exec
+DELETE FROM users
+WHERE id = $1;
