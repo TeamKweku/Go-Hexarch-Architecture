@@ -77,7 +77,11 @@ func (c *PostgresClient) migrate() error {
 		return fmt.Errorf("create migrator: %w", err)
 	}
 
-	defer migrator.Close()
+	defer func() {
+		if _, closeErr := migrator.Close(); err != nil {
+			fmt.Printf("error closing migrator: %v\n", closeErr)
+		}
+	}()
 
 	if err := migrator.Up(); err != nil && err != migrate.ErrNoChange {
 		return fmt.Errorf("migrate db: %w", err)
