@@ -7,8 +7,14 @@ import (
 )
 
 type Config struct {
-	DBDriver string `mapstructure:"CODE_ODESSEY_DB_DRIVER"`
-	DBSource string `mapstructure:"CODE_ODESSEY_DATABASE_URI"`
+	DBDriver   string `mapstructure:"CODE_ODESSEY_DB_DRIVER"`
+	DBSource   string `mapstructure:"CODE_ODESSEY_DATABASE_URI"`
+	DBHost     string `mapstructure:"CODE_ODESSEY_DB_HOST"`
+	DBPassword string `mapstructure:"CODE_ODESSEY_DB_PASSWORD"`
+	DBPort     string `mapstructure:"CODE_ODESSEY_DB_PORT"`
+	DBName     string `mapstructure:"CODE_ODESSEY_DB_NAME"`
+	DBSslMode  string `mapstructure:"CODE_ODESSEY_DB_SSL_MODE"`
+	DBUser     string `mapstructure:"CODE_ODESSEY_DB_USER"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
