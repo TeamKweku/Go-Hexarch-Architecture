@@ -47,6 +47,95 @@ func TestNew(t *testing.T) {
 
 		_ = postgresClient.Close()
 	})
+
+	t.Run("returns an error", func(t *testing.T) {
+		t.Parallel()
+
+		invalidCfg := config.Config{
+			DBHost:     "invalid-host",
+			DBPort:     "5432",
+			DBName:     "invalid-db",
+			DBUser:     "invliad-user",
+			DBPassword: "invalid-password",
+			DBSslMode:  "disable",
+		}
+
+		client, err := New(context.Background(), NewURL(invalidCfg))
+		assert.Error(t, err)
+		assert.Nil(t, client)
+	})
+}
+
+func Test_URL_New(t *testing.T) {
+	t.Parallel()
+
+	cfg := config.Config{
+		DBHost:     "localhost",
+		DBPort:     "5432",
+		DBName:     "codeodessey",
+		DBUser:     "user",
+		DBPassword: "password",
+		DBSslMode:  "disable",
+	}
+
+	wantURL := URL{
+		host:     cfg.DBHost,
+		port:     cfg.DBPort,
+		dbName:   cfg.DBName,
+		user:     cfg.DBUser,
+		password: cfg.DBPassword,
+		sslMode:  cfg.DBSslMode,
+	}
+
+	assert.Equal(t, wantURL, NewURL(cfg))
+}
+
+func Test_URL_GoString(t *testing.T) {
+	t.Parallel()
+
+	url := URL{
+		host:     "localhost",
+		port:     "5432",
+		dbName:   "realworld",
+		user:     "user",
+		password: "password",
+		sslMode:  "disable",
+	}
+
+	want := `postgres.URL{host:"localhost", port:"5432", dbName:"realworld", user:"user", password:REDACTED, sslMode:"disable"}`
+	assert.Equal(t, want, url.GoString())
+}
+
+func Test_URL_String(t *testing.T) {
+	t.Parallel()
+
+	url := URL{
+		host:     "localhost",
+		port:     "5432",
+		dbName:   "realworld",
+		user:     "user",
+		password: "password",
+		sslMode:  "disable",
+	}
+
+	want := "postgres://user:REDACTED@localhost:5432/realworld?sslmode=disable"
+	assert.Equal(t, want, url.String())
+}
+
+func Test_URL_Expose(t *testing.T) {
+	t.Parallel()
+
+	url := URL{
+		host:     "localhost",
+		port:     "5432",
+		dbName:   "realworld",
+		user:     "user",
+		password: "password",
+		sslMode:  "disable",
+	}
+
+	want := "postgres://user:password@localhost:5432/realworld?sslmode=disable"
+	assert.Equal(t, want, url.Expose())
 }
 
 func latestMigrationVersion(t *testing.T) uint {

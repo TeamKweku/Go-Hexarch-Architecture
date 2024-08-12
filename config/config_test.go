@@ -42,7 +42,7 @@ func TestLoadConfigFromEnv(t *testing.T) {
 	require.Equal(t, "password", config.DBPassword)
 	require.Equal(t, "5432", config.DBPort)
 	require.Equal(t, "codeodessey_db", config.DBName)
-	require.Equal(t, "disable", config.DBSslName)
+	require.Equal(t, "disable", config.DBSslMode)
 	require.Equal(t, "user", config.DBUser)
 
 	// Set environment variables to override the values in the .env file
@@ -136,6 +136,6 @@ func TestLoadConfigEnvironmentVariablesOverride(t *testing.T) {
 	require.Equal(t, "newpassword", config.DBPassword)
 	require.Equal(t, "3306", config.DBPort)
 	require.Equal(t, "new_db", config.DBName)
-	require.Equal(t, "prefer", config.DBSslName)
+	require.Equal(t, "prefer", config.DBSslMode)
 	require.Equal(t, "newuser", config.DBUser)
 }
