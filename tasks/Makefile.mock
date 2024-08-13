@@ -1,7 +1,7 @@
 .PHONY: mock
 
 ## Generate mock interfaces for testing
-	mock: mock/user_service mock/user_repository
+	mock: mock/user_service mock/user_repository mock/sqlc_queries
 
 mock/user_service:
 	@echo "Generating mock for user service..."
@@ -10,6 +10,10 @@ mock/user_service:
 mock/user_repository:
 	@echo "Generating mock for user repository..."
 	@mockgen -source=internal/core/ports/outbound/user_repository.go -destination=internal/core/ports/outbound/mock/mock_user_repository.go -package=mock_repo
+
+mock/sqlc_queries:
+	@echo "Generating mock for sqlc Querier interfaces"
+	@mockgen -source=internal/adapters/outbound/postgres/client.go -destination=internal/adapters/outbound/postgres/mock/mock_client.go -package=mock_sqlc
 
 ## Remove generated mock files
 mock/clean:

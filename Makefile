@@ -10,7 +10,7 @@ help:
 
 .PHONY: mock
 ## Generate mock interfaces for testing
-mock: mock/user_service mock/user_repository
+mock: mock/user_service mock/user_repository mock/sqlc_queries
 
 .PHONY: build
 ## Build an optimized Docker image. Alias for docker/build.
