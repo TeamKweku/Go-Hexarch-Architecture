@@ -20,7 +20,6 @@ func TestCreateUser(t *testing.T) {
 		Username:     randomUser.Username().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
-		Etag:         randomUser.ETag().String(),
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
@@ -45,7 +44,6 @@ func TestUserExists(t *testing.T) {
 		Username:     randomUser.Username().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
-		Etag:         randomUser.ETag().String(),
 	}
 
 	user, err := testQueries.CreateUser(context.Background(), arg)
@@ -72,7 +70,6 @@ func TestGetUserByEmail(t *testing.T) {
 
 	arg := CreateUserParams{
 		Username:     randomUser.Username().String(),
-		Etag:         randomUser.ETag().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
 	}
@@ -91,7 +88,6 @@ func TestGetUserByEmail(t *testing.T) {
 	require.Equal(t, user.ID, fetchedUser.ID)
 	require.Equal(t, user.Username, fetchedUser.Username)
 	require.Equal(t, user.PasswordHash, fetchedUser.PasswordHash)
-	require.True(t, fetchedUser.UpdatedAt.IsZero())
 
 	require.WithinDuration(
 		t,
@@ -110,7 +106,6 @@ func TestGetUserByID(t *testing.T) {
 
 	arg := CreateUserParams{
 		Username:     randomUser.Username().String(),
-		Etag:         randomUser.ETag().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
 	}
@@ -126,7 +121,6 @@ func TestGetUserByID(t *testing.T) {
 	require.Equal(t, user.Email, fetchedUser.Email)
 	require.Equal(t, user.Username, fetchedUser.Username)
 	require.Equal(t, user.PasswordHash, fetchedUser.PasswordHash)
-	require.True(t, fetchedUser.UpdatedAt.IsZero())
 
 	require.WithinDuration(
 		t,
@@ -144,7 +138,6 @@ func TestUpdateUser(t *testing.T) {
 	randomUser := user.RandomUser(t)
 	arg := CreateUserParams{
 		Username:     randomUser.Username().String(),
-		Etag:         randomUser.ETag().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
 	}
@@ -194,7 +187,6 @@ func TestUpdateUserPartial(t *testing.T) {
 	randomUser := user.RandomUser(t)
 	arg := CreateUserParams{
 		Username:     randomUser.Username().String(),
-		Etag:         randomUser.ETag().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
 	}
@@ -222,7 +214,6 @@ func TestUpdateUserPartial(t *testing.T) {
 	require.Equal(t, newUser.Username, updatedUser.Username)
 	require.NotEqual(t, newUser.Email, updatedUser.Email)
 	require.Equal(t, newUser.Role, updatedUser.Role)
-	require.Equal(t, newUser.Etag, updatedUser.Etag)
 	require.Equal(t, newUser.PasswordHash, updatedUser.PasswordHash)
 	require.Equal(t, newUser.CreatedAt, updatedUser.CreatedAt)
 	require.WithinDuration(
@@ -239,7 +230,6 @@ func TestDeleteUser(t *testing.T) {
 	randomUser := user.RandomUser(t)
 	arg := CreateUserParams{
 		Username:     randomUser.Username().String(),
-		Etag:         randomUser.ETag().String(),
 		Email:        randomUser.Email().String(),
 		PasswordHash: string(randomUser.PasswordHash().Bytes()),
 	}

@@ -21,21 +21,18 @@ const migrationsPath = "migrations"
 //go:embed migrations/*.sql
 var migrations embed.FS
 
-// Client embeds the queirer interface which describes all queries that can
-// be run again the database and some other user defined transactions
-// allow to easily use reflections to mock the database using gomock
-type Client interface {
+type queries interface {
 	sqlc.Querier
 }
 
 // client is a Posgres client
-type PostgresClient struct {
-	db *pgxpool.Pool
-	*sqlc.Queries
+type Client struct {
+	db      *pgxpool.Pool
+	queries queries
 }
 
 // create a new PostgresClient
-func New(ctx context.Context, url URL) (Client, error) {
+func New(ctx context.Context, url URL) (*Client, error) {
 	config, err := pgxpool.ParseConfig(url.Expose())
 	if err != nil {
 		return nil, fmt.Errorf("parse postgres config: %w", err)
@@ -51,9 +48,9 @@ func New(ctx context.Context, url URL) (Client, error) {
 		return nil, fmt.Errorf("ping db at %q: %w", url, err)
 	}
 
-	client := &PostgresClient{
+	client := &Client{
 		db:      db,
-		Queries: sqlc.New(db),
+		queries: sqlc.New(db),
 	}
 
 	if err := client.migrate(); err != nil {
@@ -65,13 +62,13 @@ func New(ctx context.Context, url URL) (Client, error) {
 }
 
 // close the database connection pool
-func (c *PostgresClient) Close() error {
+func (c *Client) Close() error {
 	c.db.Close()
 	return nil
 }
 
 // migrate run all migrations
-func (c *PostgresClient) migrate() error {
+func (c *Client) migrate() error {
 	migrator, err := newMigrator(c.db)
 	if err != nil {
 		return fmt.Errorf("create migrator: %w", err)

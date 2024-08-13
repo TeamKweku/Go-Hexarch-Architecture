@@ -7,6 +7,7 @@ package sqlc
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
@@ -14,33 +15,25 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    etag,
     username,
     email,
     password_hash
 )
-VALUES ($1, $2, $3, $4)
-RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
+VALUES ($1, $2, $3) 
+RETURNING id, username, email, password_hash, role, created_at, password_changed_at, updated_at
 `
 
 type CreateUserParams struct {
-	Etag         string `json:"etag"`
 	Username     string `json:"username"`
 	Email        string `json:"email"`
 	PasswordHash string `json:"password_hash"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, createUser,
-		arg.Etag,
-		arg.Username,
-		arg.Email,
-		arg.PasswordHash,
-	)
+	row := q.db.QueryRow(ctx, createUser, arg.Username, arg.Email, arg.PasswordHash)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Etag,
 		&i.Username,
 		&i.Email,
 		&i.PasswordHash,
@@ -63,46 +56,66 @@ func (q *Queries) DeleteUser(ctx context.Context, id uuid.UUID) error {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
+SELECT id, email, username, password_hash, password_changed_at, role, created_at, updated_at
 FROM users
 WHERE email = $1 LIMIT 1
 `
 
-func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error) {
+type GetUserByEmailRow struct {
+	ID                uuid.UUID `json:"id"`
+	Email             string    `json:"email"`
+	Username          string    `json:"username"`
+	PasswordHash      string    `json:"password_hash"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	Role              string    `json:"role"`
+	CreatedAt         time.Time `json:"created_at"`
+	UpdatedAt         time.Time `json:"updated_at"`
+}
+
+func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error) {
 	row := q.db.QueryRow(ctx, getUserByEmail, email)
-	var i User
+	var i GetUserByEmailRow
 	err := row.Scan(
 		&i.ID,
-		&i.Etag,
-		&i.Username,
 		&i.Email,
+		&i.Username,
 		&i.PasswordHash,
+		&i.PasswordChangedAt,
 		&i.Role,
 		&i.CreatedAt,
-		&i.PasswordChangedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
 }
 
 const getUserById = `-- name: GetUserById :one
-SELECT id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
+SELECT id, email, username, password_hash, password_changed_at, role, created_at, updated_at
 FROM users
 WHERE id = $1 LIMIT 1
 `
 
-func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (User, error) {
+type GetUserByIdRow struct {
+	ID                uuid.UUID `json:"id"`
+	Email             string    `json:"email"`
+	Username          string    `json:"username"`
+	PasswordHash      string    `json:"password_hash"`
+	PasswordChangedAt time.Time `json:"password_changed_at"`
+	Role              string    `json:"role"`
+	CreatedAt         time.Time `json:"created_at"`
+	UpdatedAt         time.Time `json:"updated_at"`
+}
+
+func (q *Queries) GetUserById(ctx context.Context, id uuid.UUID) (GetUserByIdRow, error) {
 	row := q.db.QueryRow(ctx, getUserById, id)
-	var i User
+	var i GetUserByIdRow
 	err := row.Scan(
 		&i.ID,
-		&i.Etag,
-		&i.Username,
 		&i.Email,
+		&i.Username,
 		&i.PasswordHash,
+		&i.PasswordChangedAt,
 		&i.Role,
 		&i.CreatedAt,
-		&i.PasswordChangedAt,
 		&i.UpdatedAt,
 	)
 	return i, err
@@ -121,7 +134,9 @@ SET
   END
 WHERE 
     id = $5
-RETURNING id, etag, username, email, password_hash, role, created_at, password_changed_at, updated_at
+    AND
+    updated_at = $6
+RETURNING id, username, email, password_hash, role, created_at, password_changed_at, updated_at
 `
 
 type UpdateUserParams struct {
@@ -130,6 +145,7 @@ type UpdateUserParams struct {
 	PasswordHash pgtype.Text `json:"password_hash"`
 	Role         pgtype.Text `json:"role"`
 	ID           uuid.UUID   `json:"id"`
+	UpdatedAt    time.Time   `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
@@ -139,11 +155,11 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		arg.PasswordHash,
 		arg.Role,
 		arg.ID,
+		arg.UpdatedAt,
 	)
 	var i User
 	err := row.Scan(
 		&i.ID,
-		&i.Etag,
 		&i.Username,
 		&i.Email,
 		&i.PasswordHash,

@@ -12,7 +12,6 @@ import (
 
 type User struct {
 	ID                uuid.UUID `json:"id"`
-	Etag              string    `json:"etag"`
 	Username          string    `json:"username"`
 	Email             string    `json:"email"`
 	PasswordHash      string    `json:"password_hash"`

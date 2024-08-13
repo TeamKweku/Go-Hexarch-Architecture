@@ -1,5 +1,5 @@
 -- name: GetUserById :one
-SELECT *
+SELECT id, email, username, password_hash, password_changed_at, role, created_at, updated_at
 FROM users
 WHERE id = $1 LIMIT 1;
 
@@ -11,18 +11,17 @@ SELECT EXISTS(
 );
 
 -- name: GetUserByEmail :one
-SELECT *
+SELECT id, email, username, password_hash, password_changed_at, role, created_at, updated_at
 FROM users
 WHERE email = $1 LIMIT 1;
 
 -- name: CreateUser :one
 INSERT INTO users (
-    etag,
     username,
     email,
     password_hash
 )
-VALUES ($1, $2, $3, $4)
+VALUES ($1, $2, $3) 
 RETURNING *;
 
 -- name: UpdateUser :one
@@ -38,6 +37,8 @@ SET
   END
 WHERE 
     id = sqlc.arg(id)
+    AND
+    updated_at = sqlc.arg(updated_at)
 RETURNING *;
 
 -- name: DeleteUser :exec

@@ -26,18 +26,14 @@ func TestNew(t *testing.T) {
 		assert.NoError(t, err)
 		assert.NotNil(t, client)
 
-		// Type assertion to access the underlying PostgresClient
-		postgresClient, ok := client.(*PostgresClient)
-		require.True(t, ok, "Client is not of type *PostgresClient")
+		assert.NotNil(t, client.db)
+		assert.NotNil(t, client.queries)
 
-		assert.NotNil(t, postgresClient.db)
-		assert.NotNil(t, postgresClient.Queries)
-
-		err = postgresClient.db.Ping(context.Background())
+		err = client.db.Ping(context.Background())
 		assert.NoError(t, err)
 
 		expectedVersion := latestMigrationVersion(t)
-		migrator, err := newMigrator(postgresClient.db)
+		migrator, err := newMigrator(client.db)
 		require.NoError(t, err)
 
 		gotVersion, dirty, err := migrator.Version()
@@ -45,7 +41,7 @@ func TestNew(t *testing.T) {
 		assert.Equal(t, expectedVersion, gotVersion)
 		assert.False(t, dirty, "Latest migration is dirty")
 
-		_ = postgresClient.Close()
+		_ = client.Close()
 	})
 
 	t.Run("returns an error", func(t *testing.T) {
