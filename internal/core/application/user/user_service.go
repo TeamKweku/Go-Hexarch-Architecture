@@ -63,7 +63,7 @@ func (us *UserService) Authenticate(
 		return nil, &domainUser.AuthError{Cause: err}
 	}
 
-	return user, fmt.Errorf("failed to get user by email: %w", err)
+	return user, nil
 }
 
 func (us *UserService) UpdateUser(

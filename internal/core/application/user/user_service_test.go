@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/google/uuid"
@@ -100,7 +101,10 @@ func Test_Service_Authenticate(t *testing.T) {
 			repoErr:            anyError,
 			passwordComparator: nil,
 			wantUser:           nil,
-			wantErr:            anyError,
+			wantErr: fmt.Errorf(
+				"failed to authenticate user: %w",
+				anyError,
+			),
 		},
 		{
 			name:     "passwordComparator returns an error",
