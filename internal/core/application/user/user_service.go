@@ -57,13 +57,13 @@ func (us *UserService) Authenticate(
 		if errors.As(err, &notFoundErr) {
 			return nil, &domainUser.AuthError{Cause: err}
 		}
-		return nil, err
+		return nil, fmt.Errorf("failed to authenticate user: %w", err)
 	}
 	if err := us.passwordComparator(user.PasswordHash(), req.PasswordCandidate()); err != nil {
 		return nil, &domainUser.AuthError{Cause: err}
 	}
 
-	return user, nil
+	return user, fmt.Errorf("failed to get user by email: %w", err)
 }
 
 func (us *UserService) UpdateUser(
@@ -72,7 +72,11 @@ func (us *UserService) UpdateUser(
 ) (*domainUser.User, error) {
 	user, err := us.repo.UpdateUser(ctx, req)
 	if err != nil {
-		return nil, fmt.Errorf("update user with ID %s: %w", req.UserID().String(), err)
+		return nil, fmt.Errorf(
+			"update user with ID %s: %w",
+			req.UserID().String(),
+			err,
+		)
 	}
 
 	return user, nil
