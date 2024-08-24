@@ -7,9 +7,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
+
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/etag"
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/option"
-	"golang.org/x/crypto/bcrypt"
 )
 
 // EmailAddress is a dedicated usernameCandidate type for valid email addresses. New
@@ -167,8 +168,6 @@ type Role int
 
 const (
 	RoleReader Role = iota
-	RoleAuthor
-	RoleEditor
 	RoleAdmin
 )
 
@@ -186,10 +185,6 @@ func (r Role) String() string {
 	switch r {
 	case RoleReader:
 		return "Reader"
-	case RoleAuthor:
-		return "Author"
-	case RoleEditor:
-		return "Editor"
 	case RoleAdmin:
 		return "Admin"
 	default:
@@ -507,12 +502,27 @@ func (ur *UpdateRequest) Role() option.Option[Role] {
 }
 
 func (ur UpdateRequest) GoString() string {
-	return fmt.Sprintf("UpdateRequest{userID:%#v, eTag:%#v, email:%#v, passwordHash:%#v, username:%#v, role:%#v,}",
-		ur.userID, ur.eTag, ur.email, ur.passwordHash, ur.username, ur.role)
+	return fmt.Sprintf(
+		"UpdateRequest{userID:%#v, eTag:%#v, email:%#v, passwordHash:%#v, username:%#v, role:%#v,}",
+		ur.userID,
+		ur.eTag,
+		ur.email,
+		ur.passwordHash,
+		ur.username,
+		ur.role,
+	)
 }
 
 func (ur UpdateRequest) String() string {
-	return fmt.Sprintf("{%s %s %s %s %s %s}", ur.userID, ur.eTag, ur.email, ur.passwordHash, ur.username, ur.role)
+	return fmt.Sprintf(
+		"{%s %s %s %s %s %s}",
+		ur.userID,
+		ur.eTag,
+		ur.email,
+		ur.passwordHash,
+		ur.username,
+		ur.role,
+	)
 }
 
 // Equal returns true if `ur.passwordHash` can be obtained from `password`,

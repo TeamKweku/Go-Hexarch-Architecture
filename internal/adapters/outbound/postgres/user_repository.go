@@ -90,7 +90,10 @@ func getUserByEmail(
 // [user.RegistrationRequest] and returns the created [user.User].
 //
 // Returns [user.ValidationError] if database constraints are violated.
-func (c *Client) CreateUser(ctx context.Context, req *user.RegistrationRequest) (*user.User, error) {
+func (c *Client) CreateUser(
+	ctx context.Context,
+	req *user.RegistrationRequest,
+) (*user.User, error) {
 	return createUser(ctx, c.queries, req)
 }
 
@@ -320,10 +323,6 @@ func roleStringToInt(roleStr string) (int, error) {
 	switch strings.ToLower(roleStr) {
 	case "reader":
 		return int(user.RoleReader), nil
-	case "author":
-		return int(user.RoleAuthor), nil
-	case "editor":
-		return int(user.RoleEditor), nil
 	case "admin":
 		return int(user.RoleAdmin), nil
 	default:

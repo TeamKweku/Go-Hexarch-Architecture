@@ -30,7 +30,7 @@ func RandomPasswordCandidate() string {
 }
 
 func RandomRoleCandidate() int {
-	roles := []Role{RoleReader, RoleAuthor, RoleEditor, RoleAdmin}
+	roles := []Role{RoleReader, RoleAdmin}
 	n, _ := rand.Int(rand.Reader, big.NewInt(int64(len(roles))))
 	return int(n.Int64())
 }

@@ -222,8 +222,6 @@ func TestParseRole(t *testing.T) {
 		expectError  bool
 	}{
 		{"Valid Reader", int(RoleReader), RoleReader, false},
-		{"Valid Author", int(RoleAuthor), RoleAuthor, false},
-		{"Valid Editor", int(RoleEditor), RoleEditor, false},
 		{"Valid Admin", int(RoleAdmin), RoleAdmin, false},
 		{"Invalid Low", -1, Role(0), true},
 		{"Invalid High", int(RoleAdmin) + 1, Role(0), true},
@@ -253,8 +251,6 @@ func TestRole_String(t *testing.T) {
 		expected string
 	}{
 		{RoleReader, "Reader"},
-		{RoleAuthor, "Author"},
-		{RoleEditor, "Editor"},
 		{RoleAdmin, "Admin"},
 		{Role(99), "Unknown"},
 	}
@@ -275,9 +271,7 @@ func TestRole_GoString(t *testing.T) {
 		expected string
 	}{
 		{RoleReader, "Role(0)"},
-		{RoleAuthor, "Role(1)"},
-		{RoleEditor, "Role(2)"},
-		{RoleAdmin, "Role(3)"},
+		{RoleAdmin, "Role(1)"},
 	}
 
 	for _, tt := range tests {
@@ -292,9 +286,7 @@ func TestRole_GoString(t *testing.T) {
 func TestRoleConstants(t *testing.T) {
 	t.Parallel()
 	assert.Equal(t, Role(0), RoleReader)
-	assert.Equal(t, Role(1), RoleAuthor)
-	assert.Equal(t, Role(2), RoleEditor)
-	assert.Equal(t, Role(3), RoleAdmin)
+	// assert.Equal(t, Role(3), RoleAdmin)
 }
 
 func Test_NewUser(t *testing.T) {

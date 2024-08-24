@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+
 	"github.com/teamkweku/code-odessey-hex-arch/pkg/etag"
 )
 
