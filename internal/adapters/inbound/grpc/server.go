@@ -31,7 +31,7 @@ func NewServer(port int, userServer *user.Server) *Server {
 func (s *Server) Run() error {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", s.port))
 	if err != nil {
-		return fmt.Errorf("failed to listen: %v", err)
+		return fmt.Errorf("failed to listen: %w", err)
 	}
 	s.listener = lis
 
@@ -39,12 +39,18 @@ func (s *Server) Run() error {
 
 	log.Printf("gRPC server listening on :%d", s.port)
 
-	return s.server.Serve(lis)
+	if err := s.server.Serve(lis); err != nil {
+		return fmt.Errorf("failed to serve %w", err)
+	}
+
+	return nil
 }
 
 func (s *Server) Close() {
 	if s.listener != nil {
-		s.listener.Close()
+		if err := s.listener.Close(); err != nil {
+			log.Printf("error closing listener: %v", err)
+		}
 	}
 	s.server.GracefulStop()
 	log.Println("gRPC server stopped gracefully")

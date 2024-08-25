@@ -27,7 +27,11 @@ func main() {
 		log.Fatalf("failed to connect to database: %v", err)
 	}
 
-	defer postgresAdapter.Close()
+	defer func() {
+		if err := postgresAdapter.Close(); err != nil {
+			log.Printf("error closing postgres client %v", err)
+		}
+	}()
 
 	userService := user.NewUserService(postgresAdapter)
 
