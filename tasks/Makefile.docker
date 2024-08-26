@@ -3,17 +3,17 @@
 
 ## Build an optimized docker Docker image.
 docker/build: docker/prune
-    docker build \
+	docker build \
     --rm \
     --tag ${CODE_ODESSEY_TAG} \
     --label app=${CODE_ODESSEY_APP_NAME} \
-    --build-arg PORT:${CODE_ODESSEY_DB_PORT} \
+    --build-arg PORT=${CODE_ODESSEY_DB_PORT} \
     --build-arg GO_COMPILER_CACHE=${GO_COMPILER_CACHE} \
-    docker/
+    -f docker/Dockerfile .
 
 ## Run the test suite
 docker/test: docker/prune generate/data_mount_fixtures
-    CODE_ODESSEY_DOCKER_BUILD_TARGET=base \
+	CODE_ODESSEY_DOCKER_BUILD_TARGET=base \
     CODE_ODESSEY_TAG=${CODE_ODESSEY_IMAGE_NAME}:test \
     docker compose run \
     --rm \
@@ -26,8 +26,8 @@ docker/test: docker/prune generate/data_mount_fixtures
 
 ## Run all services interactively
 docker/up: docker/prune
-    CODE_ODESSEY_DOCKER_BUILD_TARGET=optimized \
-    docker compose -f docker/docker-compose.yaml --env-file .env up --build
+	CODE_ODESSEY_DOCKER_BUILD_TARGET=optimized \
+	docker compose -f docker/docker-compose.yaml --env-file .env up --build
 
 ## Run Postgres detached.
 docker/up/postgres: docker/prune
@@ -51,4 +51,6 @@ docker/clean: docker/prune
 
 ## Housekeeping. Removes dangling images when docker tasks are invoked.
 docker/prune:
+	mkdir -p ${CODE_ODESSEY_HOST_DATA_DIR}
+    CODE_ODESSEY_DOCKER_BUILD_TARGET=optimized \
 	docker image prune --force

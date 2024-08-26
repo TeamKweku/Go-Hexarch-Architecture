@@ -15,13 +15,16 @@ type Config struct {
 	DBName     string `mapstructure:"CODE_ODESSEY_DB_NAME"`
 	DBSslMode  string `mapstructure:"CODE_ODESSEY_DB_SSL_MODE"`
 	DBUser     string `mapstructure:"CODE_ODESSEY_DB_USER"`
+	RPCPort    string `mapstructure:"CODE_ODESSEY_PORT"`
 }
 
 func LoadConfig(path string) (config Config, err error) {
 	// Add the directory where the .env file is located
 	viper.AddConfigPath(path)
 
-	// Set the config name to an empty string for .env files
+	// For docker build
+	viper.AddConfigPath("/app")
+
 	viper.SetConfigName(".env")
 
 	// Set the config type to env
