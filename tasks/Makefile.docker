@@ -20,6 +20,7 @@ docker/test: docker/prune generate/data_mount_fixtures
     --build \
     --volume $(shell pwd):/app \
     --env GOCACHE=/gocache \
+    --env CODE_ODESSEY_DB_HOST=postgres \
     --volume ${GO_COMPILER_CACHE}:/gocache \
     app \
     go test -race -v -coverprofile=coverarge.txt -covermode=atomic ./...

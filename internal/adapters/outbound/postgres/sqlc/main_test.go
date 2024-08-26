@@ -21,9 +21,6 @@ func TestMain(m *testing.M) {
 		log.Fatal("cannot load config:", err)
 	}
 
-	log.Println(config.DBSource)
-	log.Println(config.DBDriver)
-
 	testDB, err = pgxpool.New(context.Background(), config.DBSource)
 	if err != nil {
 		log.Fatal("cannot connect to db:", err)
