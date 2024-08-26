@@ -1,6 +1,6 @@
 module github.com/teamkweku/code-odessey-hex-arch
 
-go 1.22.5
+go 1.23.0
 
 require (
 	github.com/TeamKweku/code-odessey-hex-arch-proto v0.0.5
