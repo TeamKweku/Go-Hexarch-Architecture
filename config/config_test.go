@@ -9,6 +9,7 @@ import (
 )
 
 func TestLoadConfigFromEnv(t *testing.T) {
+	t.Parallel()
 	// Create a temporary directory
 	tmpDir := t.TempDir()
 

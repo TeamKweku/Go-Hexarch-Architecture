@@ -5,3 +5,4 @@ data/*
 tmp
 coverage.txt
 *.log
+coverarge.txt
