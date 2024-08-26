@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strconv"
 	"syscall"
 
 	"github.com/teamkweku/code-odessey-hex-arch/config"
@@ -15,7 +16,12 @@ import (
 )
 
 func main() {
-	cfg, err := config.LoadConfig(".")
+	configPath := os.Getenv("CONFIG_PATH")
+	if configPath == "" {
+		configPath = "."
+	}
+
+	cfg, err := config.LoadConfig(configPath)
 	if err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
@@ -28,7 +34,7 @@ func main() {
 	}
 
 	defer func() {
-		if err := postgresAdapter.Close(); err != nil {
+		if err = postgresAdapter.Close(); err != nil {
 			log.Printf("error closing postgres client %v", err)
 		}
 	}()
@@ -36,7 +42,14 @@ func main() {
 	userService := user.NewUserService(postgresAdapter)
 
 	userServer := userGRPC.NewServer(userService)
-	grpcServer := grpc.NewServer(8080, userServer)
+
+	// Convert RPCPort to int
+	port, err := strconv.Atoi(cfg.RPCPort)
+	if err != nil {
+		log.Fatalf("invalid port number: %v", err)
+	}
+
+	grpcServer := grpc.NewServer(port, userServer)
 
 	// start gRPC server
 	go func() {

@@ -1,6 +1,29 @@
 name: code-odessey
 
 services:
+  app:
+    image: ${CODE_ODESSEY_TAG}
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        GO_COMPILER_CACHE: ${GO_COMPILER_CACHE}
+        PORT: ${CODE_ODESSEY_PORT}
+      target: ${CODE_ODESSEY_DOCKER_BUILD_TARGET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file: ../.env
+    environment:
+      - CONFIG_PATH=/home/nonroot
+      - CODE_ODESSEY_DB_HOST=postgres
+    ports:
+      - ${CODE_ODESSEY_PORT}:${CODE_ODESSEY_PORT}
+    tty: true
+    volumes:
+      - type: bind
+        source: ${CODE_ODESSEY_HOST_DATA_DIR}
+        target: ${CODE_ODESSEY_DATA_MOUNT}
   postgres:
     image: postgres:16.0-alpine3.18
     environment:
