@@ -104,7 +104,7 @@ func TestLoadConfigEnvironmentVariablesOverride(t *testing.T) {
 	require.NoError(t, err)
 
 	defer func() {
-		err := os.Unsetenv("CODE_ODESSEY_DB_DRIVER")
+		err = os.Unsetenv("CODE_ODESSEY_DB_DRIVER")
 		require.NoError(t, err)
 		err = os.Unsetenv("CODE_ODESSEY_DATABASE_URI")
 		require.NoError(t, err)

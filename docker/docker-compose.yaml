@@ -17,6 +17,7 @@ services:
     environment:
       - CONFIG_PATH=/home/nonroot
       - CODE_ODESSEY_DB_HOST=postgres
+      - CODE_ODESSEY_DATABASE_URI=postgres://${CODE_ODESSEY_DB_USER}:${CODE_ODESSEY_DB_PASSWORD}@postgres:${CODE_ODESSEY_DB_PORT}/${CODE_ODESSEY_DB_NAME}?sslmode=${CODE_ODESSEY_DB_SSL_MODE}
     ports:
       - ${CODE_ODESSEY_PORT}:${CODE_ODESSEY_PORT}
     tty: true
