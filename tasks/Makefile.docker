@@ -15,7 +15,7 @@ docker/build: docker/prune
 docker/test: docker/prune generate/data_mount_fixtures
 	CODE_ODESSEY_DOCKER_BUILD_TARGET=base \
     CODE_ODESSEY_TAG=${CODE_ODESSEY_IMAGE_NAME}:test \
-    docker compose run \
+    docker compose -f docker/docker-compose.yaml run \
     --rm \
     --build \
     --volume $(shell pwd):/app \

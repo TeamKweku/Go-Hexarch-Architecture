@@ -4,7 +4,7 @@ set -eou pipefail
 
 echo "Generating development data mount fixtures..."
 
-echo "Checking for existence of host data directory '${CODE_ODESSY_HOST_DATA_DIR}'..."
+echo "Checking for existence of host data directory '${CODE_ODESSEY_HOST_DATA_DIR}'..."
 if [ -d "${CODE_ODESSEY_HOST_DATA_DIR}" ]; then
   echo "Host data directory already exists. Skipping generation."
   echo
