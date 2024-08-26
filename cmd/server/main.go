@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/signal"
 	"strconv"
-
 	"syscall"
 
 	"github.com/teamkweku/code-odessey-hex-arch/config"
@@ -23,7 +22,6 @@ func main() {
 	}
 
 	cfg, err := config.LoadConfig(configPath)
-
 	if err != nil {
 		log.Fatalf("failed to load config: %v", err)
 	}
@@ -37,7 +35,6 @@ func main() {
 
 	defer func() {
 		if err = postgresAdapter.Close(); err != nil {
-
 			log.Printf("error closing postgres client %v", err)
 		}
 	}()
@@ -53,7 +50,6 @@ func main() {
 	}
 
 	grpcServer := grpc.NewServer(port, userServer)
-
 
 	// start gRPC server
 	go func() {
