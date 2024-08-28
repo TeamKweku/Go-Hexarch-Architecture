@@ -16,6 +16,7 @@ type User struct {
 	email             EmailAddress
 	passwordHash      PasswordHash
 	role              Role
-	createAt          time.Time
+	createdAt         time.Time
 	passwordChangedAt time.Time
+	updatedAt         time.Time
 }

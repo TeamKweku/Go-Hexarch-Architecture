@@ -206,6 +206,7 @@ func NewUser(
 	role Role,
 	createAt time.Time,
 	paswordChangedAt time.Time,
+	updatedAt time.Time,
 ) *User {
 	return &User{
 		id:                id,
@@ -214,8 +215,9 @@ func NewUser(
 		email:             email,
 		passwordHash:      passwordHash,
 		role:              role,
-		createAt:          createAt,
+		createdAt:         createAt,
 		passwordChangedAt: paswordChangedAt,
+		updatedAt:         updatedAt,
 	}
 }
 
@@ -238,6 +240,22 @@ func (u *User) Email() EmailAddress {
 
 func (u *User) PasswordHash() PasswordHash {
 	return u.passwordHash
+}
+
+func (u *User) Role() Role {
+	return u.role
+}
+
+func (u *User) PasswordChangedAt() time.Time {
+	return u.passwordChangedAt
+}
+
+func (u *User) CreatedAt() time.Time {
+	return u.createdAt
+}
+
+func (u *User) UpdatedAt() time.Time {
+	return u.updatedAt
 }
 
 // GoString ensures that the [PasswordHash]'s GoString method is invoked when the

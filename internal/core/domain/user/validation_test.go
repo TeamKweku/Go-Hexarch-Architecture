@@ -300,7 +300,7 @@ func Test_NewUser(t *testing.T) {
 	role := RandomRole(t)
 	createdAt := time.Now()
 	passwordChangedAt := createdAt.Add(time.Hour)
-
+	updatedAt := createdAt.Add(2 * time.Hour)
 	user := NewUser(
 		id,
 		eTag,
@@ -310,6 +310,7 @@ func Test_NewUser(t *testing.T) {
 		role,
 		createdAt,
 		passwordChangedAt,
+		updatedAt,
 	)
 
 	assert.NotNil(t, user)

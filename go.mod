@@ -3,7 +3,7 @@ module github.com/teamkweku/code-odessey-hex-arch
 go 1.23.0
 
 require (
-	github.com/TeamKweku/code-odessey-hex-arch-proto v0.0.5
+	github.com/TeamKweku/code-odessey-hex-arch-proto v0.0.7
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/google/uuid v1.6.0
@@ -46,8 +46,7 @@ require (
 	golang.org/x/sys v0.22.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240528184218-531527333157 // indirect
-
-	google.golang.org/protobuf v1.34.2 // indirect
+	google.golang.org/protobuf v1.34.2
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
