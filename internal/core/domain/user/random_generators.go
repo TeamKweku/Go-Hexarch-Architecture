@@ -153,6 +153,7 @@ func RandomUser(t *testing.T) *User {
 	role := RandomRole(t)
 	createdAt := time.Now()
 	passwordUpdatedAt := time.Now()
+	updatedAt := time.Now()
 
 	return NewUser(
 		id,
@@ -163,5 +164,6 @@ func RandomUser(t *testing.T) *User {
 		role,
 		createdAt,
 		passwordUpdatedAt,
+		updatedAt,
 	)
 }

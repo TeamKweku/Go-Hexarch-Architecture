@@ -50,6 +50,7 @@ func getUserById(
 		row.Role,
 		row.PasswordChangedAt,
 		row.CreatedAt,
+		row.UpdatedAt,
 	)
 }
 
@@ -83,6 +84,7 @@ func getUserByEmail(
 		row.Role,
 		row.PasswordChangedAt,
 		row.CreatedAt,
+		row.UpdatedAt,
 	)
 }
 
@@ -121,8 +123,9 @@ func createUser(
 		row.Email,
 		row.PasswordHash,
 		row.Role,
-		row.CreatedAt,
 		row.PasswordChangedAt,
+		row.CreatedAt,
+		row.UpdatedAt,
 	)
 }
 
@@ -224,6 +227,7 @@ func updateUser(
 		row.Role,
 		row.PasswordChangedAt,
 		row.CreatedAt,
+		row.UpdatedAt,
 	)
 }
 
@@ -270,7 +274,8 @@ func parseUser(
 	passwordHash string,
 	role string,
 	passwordChangedAt time.Time,
-	createAt time.Time,
+	createdAt time.Time,
+	updatedAt time.Time,
 ) (*user.User, error) {
 	parsedID, err := uuid.Parse(id.String())
 	if err != nil {
@@ -281,7 +286,7 @@ func parseUser(
 		)
 	}
 
-	eTag := etag.New(parsedID, createAt)
+	eTag := etag.New(parsedID, updatedAt)
 
 	parsedEmail, err := user.ParseEmailAddress(email)
 	if err != nil {
@@ -314,8 +319,9 @@ func parseUser(
 		parsedEmail,
 		parsedPasswordHash,
 		parsedRole,
-		createAt,
+		createdAt,
 		passwordChangedAt,
+		updatedAt,
 	), nil
 }
 
