@@ -1,14 +1,16 @@
 package grpc
 
 import (
+	"context"
 	"fmt"
-	"log"
 	"net"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
+	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/middleware"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/user"
+	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/logger"
 )
 
 type Server struct {
@@ -16,15 +18,19 @@ type Server struct {
 	port       int
 	userServer *user.Server
 	listener   net.Listener
+	logger     *logger.LoggerService
 }
 
-func NewServer(port int, userServer *user.Server) *Server {
-	grpcServer := grpc.NewServer()
+func NewServer(port int, userServer *user.Server, logger logger.LoggerService) *Server {
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(middleware.GrpcLogger(&logger)),
+	)
 	reflection.Register(grpcServer)
 	return &Server{
 		server:     grpcServer,
 		port:       port,
 		userServer: userServer,
+		logger:     &logger,
 	}
 }
 
@@ -37,7 +43,11 @@ func (s *Server) Run() error {
 
 	s.userServer.RegisterServer(s.server)
 
-	log.Printf("gRPC server listening on :%d", s.port)
+	s.logger.Info(
+		context.Background(),
+		fmt.Sprintf("gRPC server listening on :%d", s.port),
+		map[string]interface{}{"port": s.port},
+	)
 
 	if err := s.server.Serve(lis); err != nil {
 		return fmt.Errorf("failed to serve %w", err)
@@ -49,9 +59,9 @@ func (s *Server) Run() error {
 func (s *Server) Close() {
 	if s.listener != nil {
 		if err := s.listener.Close(); err != nil {
-			log.Printf("error closing listener: %v", err)
+			s.logger.Error(context.Background(), err, "error closing listener", nil)
 		}
 	}
 	s.server.GracefulStop()
-	log.Println("gRPC server stopped gracefully")
+	s.logger.Info(context.Background(), "gRPC server stopped gracefully", nil)
 }
