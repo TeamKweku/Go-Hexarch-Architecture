@@ -32,7 +32,7 @@ func main() {
 
 	// initialize logger
 	zerologLogger := logger.NewZerologLogger(isPrettyPrint)
-  
+
 	loggerSrv := loggerService.NewLoggerService(zerologLogger)
 
 	// initialize database connection
