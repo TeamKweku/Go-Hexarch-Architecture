@@ -29,6 +29,7 @@ func NewZerologLogger(isPrettyPrint bool) *ZerologLogger {
 		logger = log.Logger
 	}
 
+
 	return &ZerologLogger{
 		logger: logger,
 	}
