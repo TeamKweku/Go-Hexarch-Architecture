@@ -28,8 +28,11 @@ func main() {
 		log.Fatalf("failed to load config: %v", err)
 	}
 
+	isPrettyPrint := cfg.Environment == "development"
+
 	// initialize logger
-	zerologLogger := logger.NewZerologLogger()
+	zerologLogger := logger.NewZerologLogger(isPrettyPrint)
+  
 	loggerSrv := loggerService.NewLoggerService(zerologLogger)
 
 	// initialize database connection

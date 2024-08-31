@@ -12,9 +12,23 @@ type ZerologLogger struct {
 	logger zerolog.Logger
 }
 
-func NewZerologLogger() *ZerologLogger {
-	zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
-	logger := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+func NewZerologLogger(isPrettyPrint bool) *ZerologLogger {
+	// Custom time format: "2023-05-25 14:30:00 EDT"
+	customTimeFormat := "2006-01-02 15:04:05 MST"
+
+	zerolog.TimeFieldFormat = customTimeFormat
+
+	// render pretty printing conditional based on environment
+	var logger zerolog.Logger
+	if isPrettyPrint {
+		logger = log.Output(zerolog.ConsoleWriter{
+			Out:        os.Stderr,
+			TimeFormat: customTimeFormat,
+		})
+	} else {
+		logger = log.Logger
+	}
+
 
 	return &ZerologLogger{
 		logger: logger,
