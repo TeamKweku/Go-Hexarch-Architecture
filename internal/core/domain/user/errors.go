@@ -21,7 +21,7 @@ const (
 	RoleFieldType
 )
 
-var fieldNames = [5]string{"id", "username", "email", "password"}
+var fieldNames = [5]string{"id", "username", "email", "password", "role"}
 
 func (f FieldType) String() string {
 	if int(f) > len(fieldNames) {
