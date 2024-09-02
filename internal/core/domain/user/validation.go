@@ -180,6 +180,18 @@ func ParseRole(candidate int) (Role, error) {
 	return Role(candidate), nil
 }
 
+// convert role string to int
+func RoleStringToInt(roleStr string) (int, error) {
+	switch roleStr {
+	case "Reader":
+		return int(RoleReader), nil
+	case "Admin":
+		return int(RoleAdmin), nil
+	default:
+		return -1, fmt.Errorf("unknown role: %s", roleStr)
+	}
+}
+
 // String returns the string representation of the Role
 func (r Role) String() string {
 	switch r {
