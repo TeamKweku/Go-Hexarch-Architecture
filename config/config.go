@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	Environment string `mapstructure:"CODE_ODESSEY_ENVIRONMENT"`
+	Duration    string `mapstructure:"CODE_ODESSEY_TOKEN_DURATION"`
 	DBDriver    string `mapstructure:"CODE_ODESSEY_DB_DRIVER"`
 	DBSource    string `mapstructure:"CODE_ODESSEY_DATABASE_URI"`
 	DBHost      string `mapstructure:"CODE_ODESSEY_DB_HOST"`

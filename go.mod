@@ -3,6 +3,7 @@ module github.com/teamkweku/code-odessey-hex-arch
 go 1.23.0
 
 require (
+	aidanwoods.dev/go-paseto v1.5.2
 	github.com/TeamKweku/code-odessey-hex-arch-proto v0.0.7
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/golang-migrate/migrate/v4 v4.17.1
@@ -17,6 +18,7 @@ require (
 )
 
 require (
+	aidanwoods.dev/go-result v0.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 )
