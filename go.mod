@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	aidanwoods.dev/go-paseto v1.5.2
-	github.com/TeamKweku/code-odessey-hex-arch-proto v0.0.8
+  github.com/TeamKweku/code-odessey-hex-arch-proto v0.0.8
 	github.com/brianvoe/gofakeit/v6 v6.28.0
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/google/uuid v1.6.0
