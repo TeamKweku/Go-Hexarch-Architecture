@@ -9,10 +9,12 @@ import (
 	"syscall"
 
 	"github.com/teamkweku/code-odessey-hex-arch/config"
+	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc"
 	userGRPC "github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/user"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/logger"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/postgres"
+	authService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/auth"
 	loggerService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/logger"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/user"
 )
@@ -50,7 +52,16 @@ func main() {
 
 	userService := user.NewUserService(postgresAdapter)
 
-	userServer := userGRPC.NewServer(userService)
+	// initialize token service
+	tokenService, err := auth.NewPasetoToken()
+	if err != nil {
+		log.Fatalf("failed to create token service: %v", err)
+	}
+
+	// initialize the auth service
+	authService := authService.NewAuthService(tokenService)
+
+	userServer := userGRPC.NewServer(userService, cfg, authService)
 
 	// Convert RPCPort to int
 	port, err := strconv.Atoi(cfg.RPCPort)
