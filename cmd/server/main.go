@@ -66,6 +66,7 @@ func main() {
 
 	userServer := userGRPC.NewServer(userService, cfg, authService, sessionSrv)
 
+
 	// Convert RPCPort to int
 	port, err := strconv.Atoi(cfg.RPCPort)
 	if err != nil {

@@ -19,11 +19,11 @@ import (
 
 type Server struct {
 	pb.UnimplementedUserServiceServer
+
 	userService    inbound.UserService
 	config         config.Config
 	authService    inbound.TokenService
 	sessionService *session.SessionService
-}
 
 func NewServer(
 	userService inbound.UserService,
@@ -36,7 +36,6 @@ func NewServer(
 		authService:    authService,
 		sessionService: sessionService,
 		config:         cfg,
-	}
 }
 
 func (s *Server) RegisterServer(server *grpc.Server) {
