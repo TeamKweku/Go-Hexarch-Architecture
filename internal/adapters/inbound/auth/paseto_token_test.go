@@ -20,7 +20,7 @@ func TestPasetoToken_CreateToken(t *testing.T) {
 
 	usr := user.RandomUser(t)
 	cfg := config.Config{
-		Duration: "30m",
+		AccessTokenDuration: "30m",
 	}
 
 	token, payload, err := pt.CreateToken(usr, cfg)
@@ -37,7 +37,7 @@ func TestPasetoToken_VerifyToken(t *testing.T) {
 
 	usr := user.RandomUser(t)
 	cfg := config.Config{
-		Duration: "30m",
+		AccessTokenDuration: "30m",
 	}
 
 	token, payload, err := pt.CreateToken(usr, cfg)
@@ -58,7 +58,7 @@ func TestPasetoToken_VerifyToken_Expired(t *testing.T) {
 
 	usr := user.RandomUser(t)
 	cfg := config.Config{
-		Duration: "10ms", // Set a short duration for testing expiration
+		AccessTokenDuration: "10ms", // Set a short duration for testing expiration
 	}
 
 	token, payload, err := pt.CreateToken(usr, cfg)

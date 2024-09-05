@@ -24,7 +24,7 @@ func NewPayload(user *user.User, cfg config.Config) (*Payload, error) {
 		return nil, NewInvalidUUIDError("invalid UUID creation error")
 	}
 
-	durationStr := cfg.Duration
+	durationStr := cfg.AccessTokenDuration
 	duration, err := time.ParseDuration(durationStr)
 	if err != nil {
 		return nil, NewInvalidDurationError(duration, "invalid token duration")

@@ -16,6 +16,7 @@ import (
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/postgres"
 	authService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/auth"
 	loggerService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/logger"
+	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/session"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/user"
 )
 
@@ -50,6 +51,8 @@ func main() {
 		}
 	}()
 
+	// create sessions service
+	sessionSrv := session.NewSessionService(postgresAdapter)
 	userService := user.NewUserService(postgresAdapter)
 
 	// initialize token service
@@ -59,9 +62,9 @@ func main() {
 	}
 
 	// initialize the auth service
-	authService := authService.NewAuthService(tokenService)
+	authService := authService.NewAuthService(tokenService, sessionSrv)
 
-	userServer := userGRPC.NewServer(userService, cfg, authService)
+	userServer := userGRPC.NewServer(userService, cfg, authService, sessionSrv)
 
 	// Convert RPCPort to int
 	port, err := strconv.Atoi(cfg.RPCPort)
