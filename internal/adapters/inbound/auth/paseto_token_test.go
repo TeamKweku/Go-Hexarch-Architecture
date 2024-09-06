@@ -21,7 +21,6 @@ func TestPasetoToken_CreateToken(t *testing.T) {
 	usr := user.RandomUser(t)
 	cfg := config.Config{
 		AccessTokenDuration: "30m",
-
 	}
 
 	token, payload, err := pt.CreateToken(usr, cfg)

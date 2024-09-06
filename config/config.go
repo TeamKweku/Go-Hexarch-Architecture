@@ -19,7 +19,6 @@ type Config struct {
 	DBSslMode            string `mapstructure:"CODE_ODESSEY_DB_SSL_MODE"`
 	DBUser               string `mapstructure:"CODE_ODESSEY_DB_USER"`
 	RPCPort              string `mapstructure:"CODE_ODESSEY_PORT"`
-
 }
 
 func LoadConfig(path string) (config Config, err error) {
