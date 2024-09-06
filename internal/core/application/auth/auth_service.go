@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/teamkweku/code-odessey-hex-arch/config"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/session"
+
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/user"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/ports/inbound"
@@ -19,6 +20,7 @@ type AuthService struct {
 
 func NewAuthService(tokenService inbound.TokenService, sessionService *session.SessionService) *AuthService {
 	return &AuthService{tokenService, sessionService}
+
 }
 
 func (as *AuthService) CreateToken(

@@ -109,6 +109,7 @@ func (s *Server) Authenticate(
 
 	// generate access token
 	accessToken, accessPayload, err := s.authService.CreateToken(authenticatedUser, s.config)
+
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create access token: %v", err)
 	}
