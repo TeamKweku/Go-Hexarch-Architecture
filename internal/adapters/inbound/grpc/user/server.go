@@ -22,8 +22,9 @@ type Server struct {
 	userService    inbound.UserService
 	config         config.Config
 	authService    inbound.TokenService
-	sessionService *session.SessionService
+  sessionService *session.SessionService
 }
+
 
 func NewServer(
 	userService inbound.UserService,
@@ -36,7 +37,6 @@ func NewServer(
 		authService:    authService,
 		sessionService: sessionService,
 		config:         cfg,
-	}
 }
 
 func (s *Server) RegisterServer(server *grpc.Server) {

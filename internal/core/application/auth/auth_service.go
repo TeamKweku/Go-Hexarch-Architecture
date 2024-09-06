@@ -20,7 +20,6 @@ type AuthService struct {
 
 func NewAuthService(tokenService inbound.TokenService, sessionService *session.SessionService) *AuthService {
 	return &AuthService{tokenService, sessionService}
-
 }
 
 func (as *AuthService) CreateToken(
