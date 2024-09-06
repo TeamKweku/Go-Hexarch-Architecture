@@ -25,10 +25,14 @@ docker/test: docker/prune generate/data_mount_fixtures
     app \
     go test -race -v -coverprofile=coverarge.txt -covermode=atomic ./...
 
-## Run all services interactively
-docker/up: docker/prune
+## Build and run docker compose interactively
+docker/compose-build: docker/prune
 	CODE_ODESSEY_DOCKER_BUILD_TARGET=optimized \
 	docker compose -f docker/docker-compose.yaml --env-file .env up --build
+
+## Run program without rebuild container
+docker/up: docker/prune
+	docker compose -f docker/docker-compose.yaml --env-file .env up
 
 ## Run Postgres detached.
 docker/up/postgres: docker/prune

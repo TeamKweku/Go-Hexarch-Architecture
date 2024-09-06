@@ -36,6 +36,11 @@ postgres: docker/up/postgres
 ## Run the app interactively. Alias for docker/up.
 up: docker/up
 
+.PHONY: compse-build
+### build and run compose image interactively
+compose-build: docker/compose-build
+
+
 .PHONY: down
 ## Stop the app. Alias for docker/down.
 down: docker/down
