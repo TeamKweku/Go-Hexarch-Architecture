@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/teamkweku/code-odessey-hex-arch/config"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/session"
 
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/auth"
@@ -24,9 +23,9 @@ func NewAuthService(tokenService inbound.TokenService, sessionService *session.S
 
 func (as *AuthService) CreateToken(
 	user *user.User,
-	cfg config.Config,
+	durationStr string,
 ) (string, *auth.Payload, error) {
-	token, payload, err := as.tokenService.CreateToken(user, cfg)
+	token, payload, err := as.tokenService.CreateToken(user, durationStr)
 	if err != nil {
 		return "", nil, fmt.Errorf("auth service - create token: %w", err)
 	}

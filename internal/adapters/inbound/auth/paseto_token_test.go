@@ -23,7 +23,7 @@ func TestPasetoToken_CreateToken(t *testing.T) {
 		AccessTokenDuration: "30m",
 	}
 
-	token, payload, err := pt.CreateToken(usr, cfg)
+	token, payload, err := pt.CreateToken(usr, cfg.AccessTokenDuration)
 	require.NoError(t, err)
 	assert.NotEmpty(t, token)
 	assert.NotNil(t, payload)
@@ -40,7 +40,7 @@ func TestPasetoToken_VerifyToken(t *testing.T) {
 		AccessTokenDuration: "30m",
 	}
 
-	token, payload, err := pt.CreateToken(usr, cfg)
+	token, payload, err := pt.CreateToken(usr, cfg.AccessTokenDuration)
 	require.NoError(t, err)
 	assert.NotEmpty(t, token)
 	assert.NotNil(t, payload)
@@ -61,7 +61,7 @@ func TestPasetoToken_VerifyToken_Expired(t *testing.T) {
 		AccessTokenDuration: "10ms", // Set a short duration for testing expiration
 	}
 
-	token, payload, err := pt.CreateToken(usr, cfg)
+	token, payload, err := pt.CreateToken(usr, cfg.AccessTokenDuration)
 	require.NoError(t, err)
 	assert.NotEmpty(t, token)
 	assert.NotNil(t, payload)
