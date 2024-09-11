@@ -108,13 +108,13 @@ func (s *Server) Authenticate(
 	}
 
 	// generate access token
-	accessToken, accessPayload, err := s.authService.CreateToken(authenticatedUser, s.config)
+	accessToken, accessPayload, err := s.authService.CreateToken(authenticatedUser, s.config.AccessTokenDuration)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create access token: %v", err)
 	}
 
 	// create refresh token
-	refreshToken, refreshPayload, err := s.authService.CreateToken(authenticatedUser, s.config)
+	refreshToken, refreshPayload, err := s.authService.CreateToken(authenticatedUser, s.config.RefreshTokenDuration)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create refresh token: %v", err)
 	}

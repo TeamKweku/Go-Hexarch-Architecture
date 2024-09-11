@@ -6,7 +6,6 @@ import (
 
 	"aidanwoods.dev/go-paseto"
 
-	"github.com/teamkweku/code-odessey-hex-arch/config"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/user"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/ports/inbound"
@@ -39,9 +38,9 @@ func NewPasetoToken() (inbound.TokenService, error) {
 // CreateToken creates a new paseto token
 func (pt *PasetoToken) CreateToken(
 	user *user.User,
-	cfg config.Config,
+	durationStr string,
 ) (string, *auth.Payload, error) {
-	payload, err := auth.NewPayload(user, cfg)
+	payload, err := auth.NewPayload(user, durationStr)
 	if err != nil {
 		return "", nil, fmt.Errorf("failed to set token payload: %w", err)
 	}

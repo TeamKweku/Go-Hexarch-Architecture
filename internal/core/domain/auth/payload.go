@@ -5,7 +5,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/teamkweku/code-odessey-hex-arch/config"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/user"
 )
 
@@ -18,13 +17,12 @@ type Payload struct {
 }
 
 // New Payload creates a new token payload with specific username and duration
-func NewPayload(user *user.User, cfg config.Config) (*Payload, error) {
+func NewPayload(user *user.User, durationStr string) (*Payload, error) {
 	tokenID, err := uuid.NewRandom()
 	if err != nil {
 		return nil, NewInvalidUUIDError("invalid UUID creation error")
 	}
 
-	durationStr := cfg.AccessTokenDuration
 	duration, err := time.ParseDuration(durationStr)
 	if err != nil {
 		return nil, NewInvalidDurationError(duration, "invalid token duration")
