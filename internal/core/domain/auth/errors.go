@@ -22,6 +22,7 @@ var fieldNames = [7]string{
 	"uuid",
 	"token",
 	"time range",
+	"duration",
 	"expired token",
 	"secret key",
 	"token creation",
