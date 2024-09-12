@@ -11,6 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 
 	"github.com/teamkweku/code-odessey-hex-arch/config"
+	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/metadata"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/session"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/auth"
 	domainUser "github.com/teamkweku/code-odessey-hex-arch/internal/core/domain/user"
@@ -19,10 +20,11 @@ import (
 
 type Server struct {
 	pb.UnimplementedUserServiceServer
-	userService    inbound.UserService
-	config         config.Config
-	authService    inbound.TokenService
-	sessionService *session.SessionService
+	userService       inbound.UserService
+	config            config.Config
+	authService       inbound.TokenService
+	sessionService    *session.SessionService
+	metadataExtractor *metadata.MetadataExtractor
 }
 
 func NewServer(
@@ -32,10 +34,11 @@ func NewServer(
 	sessionService *session.SessionService,
 ) *Server {
 	return &Server{
-		userService:    userService,
-		authService:    authService,
-		sessionService: sessionService,
-		config:         cfg,
+		userService:       userService,
+		authService:       authService,
+		sessionService:    sessionService,
+		config:            cfg,
+		metadataExtractor: &metadata.MetadataExtractor{},
 	}
 }
 
@@ -119,11 +122,11 @@ func (s *Server) Authenticate(
 		return nil, status.Errorf(codes.Internal, "failed to create refresh token: %v", err)
 	}
 
-	// TODO
-	// create session with refresh token and payload
+	md := s.metadataExtractor.Extract(ctx)
 
+	// create session with refresh token and payload
 	// assign empty strings for test purposes for no
-	session, err := auth.NewSessions(authenticatedUser.ID(), refreshToken, refreshPayload, "", "")
+	session, err := auth.NewSessions(authenticatedUser.ID(), refreshToken, refreshPayload, md.UserAgent, md.ClientIP)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to create session: %v", err)
 	}
