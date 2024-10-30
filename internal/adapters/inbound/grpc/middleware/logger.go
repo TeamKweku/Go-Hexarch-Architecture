@@ -8,10 +8,10 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/teamkweku/code-odessey-hex-arch/internal/core/ports/outbound"
+	"github.com/teamkweku/code-odessey-hex-arch/pkg/logger"
 )
 
-func GrpcLogger(logger outbound.Logger) grpc.UnaryServerInterceptor {
+func GrpcLogger(logger logger.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		startTime := time.Now()
 		// forwards request to handler to be processed

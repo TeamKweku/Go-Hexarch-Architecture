@@ -10,7 +10,7 @@ import (
 
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/middleware"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/user"
-	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/logger"
+	"github.com/teamkweku/code-odessey-hex-arch/pkg/logger"
 )
 
 type Server struct {
@@ -18,19 +18,19 @@ type Server struct {
 	port       int
 	userServer *user.Server
 	listener   net.Listener
-	logger     *logger.LoggerService
+	logger     logger.Logger
 }
 
-func NewServer(port int, userServer *user.Server, logger logger.LoggerService) *Server {
+func NewServer(port int, userServer *user.Server, logger logger.Logger) *Server {
 	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(middleware.GrpcLogger(&logger)),
+		grpc.UnaryInterceptor(middleware.GrpcLogger(logger)),
 	)
 	reflection.Register(grpcServer)
 	return &Server{
 		server:     grpcServer,
 		port:       port,
 		userServer: userServer,
-		logger:     &logger,
+		logger:     logger,
 	}
 }
 

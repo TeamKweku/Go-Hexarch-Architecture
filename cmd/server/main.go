@@ -12,12 +12,11 @@ import (
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc"
 	userGRPC "github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/user"
-	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/logger"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/postgres"
 	authService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/auth"
-	loggerService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/logger"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/session"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/user"
+	"github.com/teamkweku/code-odessey-hex-arch/pkg/logger"
 )
 
 func main() {
@@ -34,9 +33,7 @@ func main() {
 	isPrettyPrint := cfg.Environment == "development"
 
 	// initialize logger
-	zerologLogger := logger.NewZerologLogger(isPrettyPrint)
-
-	loggerSrv := loggerService.NewLoggerService(zerologLogger)
+	zeroLogger := logger.NewZerologLogger(isPrettyPrint)
 
 	// initialize database connection
 	postgresURL := postgres.NewURL(cfg)
@@ -72,7 +69,7 @@ func main() {
 		log.Fatalf("invalid port number: %v", err)
 	}
 
-	grpcServer := grpc.NewServer(port, userServer, *loggerSrv)
+	grpcServer := grpc.NewServer(port, userServer, zeroLogger)
 
 	// start gRPC server
 	go func() {

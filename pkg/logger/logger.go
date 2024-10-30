@@ -1,12 +1,18 @@
 package logger
 
 import (
+	"context"
 	"os"
 
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
-	"golang.org/x/net/context"
 )
+
+type Logger interface {
+	Info(ctx context.Context, msg string, fields map[string]interface{})
+	Error(ctx context.Context, err error, msg string, fields map[string]interface{})
+	// WithContext(ctx context.Context)
+}
 
 type ZerologLogger struct {
 	logger zerolog.Logger
@@ -46,9 +52,3 @@ func (z *ZerologLogger) Error(
 ) {
 	z.logger.Error().Err(err).Fields(fields).Msg(msg)
 }
-
-// func (z *ZerologLogger) WithContext(ctx context.Context) *ZerologLogger {
-// 	return &ZerologLogger{
-// 		logger: z.logger.With().Logger(),
-// 	}
-// }
