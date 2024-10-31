@@ -159,6 +159,7 @@ func TestZerologLogger_Error(t *testing.T) {
 	assert.Contains(t, output, `"key":"value"`)
 }
 
+//nolint:paralleltest
 func TestGetStackTrace(t *testing.T) {
 	t.Parallel()
 
