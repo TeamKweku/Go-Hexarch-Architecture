@@ -13,6 +13,9 @@ import (
 
 func GrpcLogger(logger logger.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
+		// create a logger with request context
+		logger = logger.WithContext(ctx)
+
 		startTime := time.Now()
 		// forwards request to handler to be processed
 		result, err := handler(ctx, req)
