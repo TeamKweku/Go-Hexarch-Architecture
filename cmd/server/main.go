@@ -9,9 +9,9 @@ import (
 	"syscall"
 
 	"github.com/teamkweku/code-odessey-hex-arch/config"
-	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc"
 	userGRPC "github.com/teamkweku/code-odessey-hex-arch/internal/adapters/inbound/grpc/user"
+	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/adapters/outbound/postgres"
 	authService "github.com/teamkweku/code-odessey-hex-arch/internal/core/application/auth"
 	"github.com/teamkweku/code-odessey-hex-arch/internal/core/application/session"
